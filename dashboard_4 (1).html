@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>لوحة تحكم التقارير | LAZURDE & MANISA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #0a0e1a; --bg2: #0f1525; --bg3: #161d30;
+  --card: #1a2235; --card2: #1f2a40; --border: #2a3550;
+  --accent: #00d4aa; --accent2: #0099ff; --gold: #ffc947;
+  --red: #ff4757; --green: #2ed573; --text: #e8edf8;
+  --text2: #8898b8; --text3: #5a6a8a;
+  --radius: 14px; --radius-sm: 8px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Cairo','Tajawal',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg2); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* HEADER */
+.header { background: linear-gradient(135deg,#0f1a2e,#1a2640,#0d1a30); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+.header-inner { display:flex; align-items:center; justify-content:space-between; padding:12px 20px; max-width:1400px; margin:0 auto; gap:12px; flex-wrap:wrap; }
+.logo { display:flex; align-items:center; gap:12px; }
+.logo-icon { width:44px; height:44px; background:linear-gradient(135deg,var(--accent),var(--accent2)); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; box-shadow:0 4px 15px rgba(0,212,170,0.3); }
+.logo-title { font-size:16px; font-weight:900; } .logo-sub { font-size:11px; color:var(--accent); font-weight:600; letter-spacing:1px; }
+.header-date { font-size:12px; color:var(--text2); background:var(--bg3); padding:6px 12px; border-radius:20px; border:1px solid var(--border); }
+.refresh-btn { background:var(--bg3); border:1px solid var(--border); color:var(--accent); padding:8px 16px; border-radius:var(--radius-sm); cursor:pointer; font-family:'Cairo',sans-serif; font-size:13px; font-weight:600; transition:all 0.2s; }
+.refresh-btn:hover { background:var(--card2); border-color:var(--accent); }
+
+/* FILTERS */
+.filters { background:var(--bg2); border-bottom:1px solid var(--border); padding:12px 20px; }
+.filters-inner { max-width:1400px; margin:0 auto; display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+.filter-input { background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-family:'Cairo',sans-serif; font-size:13px; padding:8px 12px; outline:none; transition:border-color 0.2s; }
+.filter-input:focus { border-color:var(--accent); }
+.filter-label { font-size:12px; color:var(--text2); font-weight:600; }
+
+/* MAIN */
+.main { max-width:1400px; margin:0 auto; padding:20px 16px 60px; }
+
+/* KPI CARDS */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+@media(max-width:900px){ .kpi-grid { grid-template-columns:1fr 1fr; } }
+@media(max-width:500px){ .kpi-grid { grid-template-columns:1fr; } }
+.kpi-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:18px; position:relative; overflow:hidden; }
+.kpi-card::before { content:''; position:absolute; top:0; right:0; width:3px; height:100%; border-radius:0 var(--radius) var(--radius) 0; }
+.kpi-card.green::before { background:var(--green); }
+.kpi-card.gold::before { background:var(--gold); }
+.kpi-card.blue::before { background:var(--accent2); }
+.kpi-card.accent::before { background:var(--accent); }
+.kpi-icon { font-size:24px; margin-bottom:8px; }
+.kpi-label { font-size:11px; color:var(--text2); font-weight:600; letter-spacing:0.5px; margin-bottom:4px; }
+.kpi-value { font-size:28px; font-weight:900; }
+.kpi-sub { font-size:11px; color:var(--text3); margin-top:4px; }
+
+/* TABLE */
+.table-card { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
+.table-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); flex-wrap:wrap; gap:8px; }
+.table-title { font-size:15px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.table-count { font-size:12px; color:var(--text2); background:var(--bg3); padding:4px 10px; border-radius:20px; border:1px solid var(--border); }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:900px; }
+thead tr { background:var(--bg3); }
+th { padding:11px 14px; text-align:right; font-size:11px; font-weight:700; color:var(--text2); letter-spacing:0.5px; white-space:nowrap; border-bottom:1px solid var(--border); }
+td { padding:12px 14px; font-size:13px; border-bottom:1px solid var(--border)44; white-space:nowrap; }
+tbody tr { transition:background 0.15s; }
+tbody tr:hover { background:var(--card2); }
+tbody tr:last-child td { border-bottom:none; }
+
+/* BADGES */
+.pct-badge { display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; }
+.pct-high { background:rgba(46,213,115,0.15); color:var(--green); }
+.pct-mid  { background:rgba(255,201,71,0.15); color:var(--gold); }
+.pct-low  { background:rgba(255,71,87,0.12); color:var(--red); }
+
+/* NOTES */
+.note-cell { max-width:180px; overflow:hidden; text-overflow:ellipsis; color:var(--text2); font-size:12px; }
+.expand-btn { background:none; border:none; color:var(--accent); cursor:pointer; font-size:12px; font-family:'Cairo',sans-serif; padding:0; }
+
+/* MODAL */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:500; align-items:center; justify-content:center; padding:20px; }
+.modal-bg.open { display:flex; }
+.modal { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:24px; max-width:600px; width:100%; max-height:80vh; overflow-y:auto; box-shadow:var(--shadow); }
+.modal-title { font-size:16px; font-weight:900; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; }
+.modal-close { background:none; border:none; color:var(--text2); cursor:pointer; font-size:20px; }
+.modal-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border)44; font-size:13px; }
+.modal-row:last-child { border-bottom:none; }
+.modal-key { color:var(--text2); }
+.modal-val { color:var(--text); font-weight:600; text-align:left; max-width:60%; word-break:break-word; }
+.sec-progress { margin-top:12px; }
+.sec-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:12px; }
+.sec-name { width:140px; color:var(--text2); }
+.sec-track { flex:1; height:8px; background:var(--border); border-radius:4px; overflow:hidden; }
+.sec-fill { height:100%; border-radius:4px; background:var(--accent); }
+.sec-pct { width:40px; color:var(--text3); font-size:11px; text-align:left; }
+
+/* LOADING */
+.loading { text-align:center; padding:60px 20px; color:var(--text2); }
+.loading-spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 16px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.empty { text-align:center; padding:60px 20px; color:var(--text3); font-size:14px; }
+
+/* TOAST */
+.toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--card2); border:1px solid var(--accent); color:var(--text); padding:12px 24px; border-radius:30px; font-size:13px; font-weight:600; z-index:999; transition:transform 0.3s ease; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* AUTH OVERLAY */
+.auth-overlay {
+  position: fixed; inset: 0;
+  background: #0a0e1a;
+  z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.auth-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 32px;
+  width: 100%; max-width: 400px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+.auth-logo { text-align: center; margin-bottom: 28px; }
+.auth-logo-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 8px 24px rgba(0,212,170,0.3);
+  margin-bottom: 14px;
+}
+.auth-title { font-size: 20px; font-weight: 900; color: var(--text); }
+.auth-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.auth-field { margin-bottom: 16px; }
+.auth-field label { display: block; font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: 8px; letter-spacing: 0.5px; }
+.auth-field input {
+  width: 100%; background: var(--bg3); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: 'Cairo', sans-serif; font-size: 14px;
+  padding: 12px 14px; outline: none; transition: border-color 0.2s; direction: ltr;
+}
+.auth-field input:focus { border-color: var(--accent); }
+.auth-btn {
+  width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; border-radius: var(--radius-sm);
+  color: #0a0e1a; font-family: 'Cairo', sans-serif;
+  font-size: 15px; font-weight: 900; padding: 14px; cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s; margin-top: 8px;
+}
+.auth-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.auth-error {
+  background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.3);
+  color: var(--red); border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 12px; font-weight: 600;
+  margin-top: 14px; display: none; text-align: center;
+}
+.logout-btn {
+  background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.2);
+  border-radius: 20px; color: var(--red); font-family: 'Cairo', sans-serif;
+  font-size: 12px; font-weight: 600; padding: 6px 14px; cursor: pointer;
+  transition: background 0.2s; white-space: nowrap;
+}
+.logout-btn:hover { background: rgba(255,71,87,0.22); }
+.user-badge {
+  font-size: 11px; color: var(--text2); background: var(--bg3);
+  border: 1px solid var(--border); padding: 5px 10px; border-radius: 20px;
+  max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH OVERLAY -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">📊</div>
+      <div class="auth-title">لوحة تحكم التقارير</div>
+      <div class="auth-sub">LAZURDE &amp; MANISA • تسجيل الدخول</div>
+    </div>
+    <div class="auth-field">
+      <label>📧 البريد الإلكتروني</label>
+      <input type="email" id="authEmail" placeholder="example@company.com" autocomplete="email">
+    </div>
+    <div class="auth-field">
+      <label>🔒 كلمة المرور</label>
+      <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="auth-btn" id="authBtn" onclick="doLogin()">🚀 دخول</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">📊</div>
+      <div>
+        <div class="logo-title">لوحة تحكم التقارير</div>
+        <div class="logo-sub">LAZURDE & MANISA</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <div class="header-date" id="headerDate">--</div>
+      <button class="refresh-btn" onclick="loadReports()">🔄 تحديث</button>
+      <div class="user-badge" id="userBadge" style="display:none"></div>
+      <button class="logout-btn" id="logoutBtn" onclick="doLogout()" style="display:none">خروج 🚪</button>
+    </div>
+  </div>
+</header>
+
+<div class="filters">
+  <div class="filters-inner">
+    <span class="filter-label">تصفية:</span>
+    <input class="filter-input" type="date" id="filterFrom" placeholder="من تاريخ">
+    <input class="filter-input" type="date" id="filterTo" placeholder="إلى تاريخ">
+    <input class="filter-input" type="text" id="filterBranch" placeholder="🏪 الفرع..." style="width:140px;" oninput="renderTable()">
+    <input class="filter-input" type="text" id="filterManager" placeholder="👤 المدير..." style="width:140px;" oninput="renderTable()">
+    <button class="refresh-btn" onclick="loadReports()">🔍 بحث</button>
+    <button class="refresh-btn" onclick="clearFilters()" style="color:var(--text2);">✕ مسح</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card accent">
+      <div class="kpi-icon">📋</div>
+      <div class="kpi-label">إجمالي التقارير</div>
+      <div class="kpi-value" id="kpiTotal">—</div>
+      <div class="kpi-sub">تقرير مُرسَل</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-icon">✅</div>
+      <div class="kpi-label">متوسط الإنجاز</div>
+      <div class="kpi-value" id="kpiAvgPct">—</div>
+      <div class="kpi-sub">نسبة إتمام المهام</div>
+    </div>
+    <div class="kpi-card gold">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-label">إجمالي المبيعات</div>
+      <div class="kpi-value" id="kpiSales">—</div>
+      <div class="kpi-sub">دينار عراقي</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="kpi-icon">👥</div>
+      <div class="kpi-label">إجمالي الزبائن</div>
+      <div class="kpi-value" id="kpiCustomers">—</div>
+      <div class="kpi-sub">زبون دخل الفرع</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <div class="table-header">
+      <div class="table-title">📄 سجل التقارير اليومية</div>
+      <span class="table-count" id="tableCount">0 تقرير</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>📅 التاريخ</th>
+            <th>🏪 الفرع</th>
+            <th>👤 المدير</th>
+            <th>✅ الإنجاز</th>
+            <th>🛍️ القطع</th>
+            <th>🧾 الفواتير</th>
+            <th>👥 الزبائن</th>
+            <th>💰 المبيعات</th>
+            <th>📝 ملاحظات</th>
+            <th>⏱️ وقت الإرسال</th>
+          </tr>
+        </thead>
+        <tbody id="reportsTbody">
+          <tr><td colspan="11"><div class="loading"><div class="loading-spinner"></div>جاري التحميل...</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal" id="modalContent">
+    <div class="modal-title">
+      <span id="modalTitle">تفاصيل التقرير</span>
+      <button class="modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://srtutwgpbllrrdzgouje.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_25A9gDLPWTvHNjjd1rWJAg_HQuFxf7d';
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── AUTH ──────────────────────────────────────────────────
+async function checkAuth() {
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session) {
+    await verifyRole(session.user);
+  } else {
+    document.getElementById('authOverlay').style.display = 'flex';
+  }
+}
+
+async function verifyRole(user) {
+  const { data, error } = await _sb
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single();
+  if (error || !data || data.role !== 'dashboard') {
+    await _sb.auth.signOut();
+    showAuthError('⛔ غير مصرح — هذه الصفحة للإدارة فقط');
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('authBtn').disabled = false;
+    document.getElementById('authBtn').textContent = '🚀 دخول';
+    return;
+  }
+  showApp(user);
+}
+
+function showApp(user) {
+  document.getElementById('authOverlay').style.display = 'none';
+  const badge = document.getElementById('userBadge');
+  const logoutBtn = document.getElementById('logoutBtn');
+  badge.textContent = '👤 ' + (user.email || '');
+  badge.style.display = 'block';
+  logoutBtn.style.display = 'block';
+  loadReports();
+}
+
+async function doLogin() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass  = document.getElementById('authPassword').value;
+  const btn   = document.getElementById('authBtn');
+  const errEl = document.getElementById('authError');
+  errEl.style.display = 'none';
+  if (!email || !pass) { showAuthError('أدخل الإيميل وكلمة المرور'); return; }
+  btn.disabled = true; btn.textContent = '⏳ جاري الدخول...';
+  const { data, error } = await _sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    showAuthError('❌ بيانات غير صحيحة، تحقق من الإيميل أو كلمة المرور');
+    btn.disabled = false; btn.textContent = '🚀 دخول';
+  } else {
+    await verifyRole(data.user);
+  }
+}
+
+function showAuthError(msg) {
+  const e = document.getElementById('authError');
+  e.textContent = msg; e.style.display = 'block';
+}
+
+async function doLogout() {
+  await _sb.auth.signOut();
+  document.getElementById('userBadge').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
+  document.getElementById('authOverlay').style.display = 'flex';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authError').style.display = 'none';
+  document.getElementById('authBtn').disabled = false;
+  document.getElementById('authBtn').textContent = '🚀 دخول';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('authPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('authEmail').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('authPassword').focus();
+  });
+  checkAuth();
+});
+
+let allReports = [];
+
+const sectionLabels = {
+  open:   'فتح الفرع',
+  huddle: 'اجتماع اليوم',
+  sales:  'متابعة المبيعات',
+  field:  'الإشراف الميداني',
+  cx:     'تجربة الزبون',
+  close:  'إغلاق الفرع',
+};
+
+function updateDate() {
+  document.getElementById('headerDate').textContent =
+    new Date().toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+updateDate();
+setInterval(updateDate, 60000);
+
+async function loadReports() {
+  const tbody = document.getElementById('reportsTbody');
+  tbody.innerHTML = `<tr><td colspan="11"><div class="loading"><div class="loading-spinner"></div>جاري التحميل...</div></td></tr>`;
+
+  try {
+    let query = _sb.from('daily_reports').select('*').order('created_at', { ascending: false });
+
+    const from = document.getElementById('filterFrom').value;
+    const to   = document.getElementById('filterTo').value;
+    if (from) query = query.gte('task_date', from);
+    if (to)   query = query.lte('task_date', to);
+
+    const { data, error } = await query.limit(500);
+    if (error) throw error;
+
+    allReports = data || [];
+    renderTable();
+    updateKPIs();
+  } catch(err) {
+    tbody.innerHTML = `<tr><td colspan="11"><div class="empty">❌ خطأ في التحميل: ${err.message}</div></td></tr>`;
+  }
+}
+
+function renderTable() {
+  const branchF  = document.getElementById('filterBranch').value.toLowerCase();
+  const managerF = document.getElementById('filterManager').value.toLowerCase();
+
+  let filtered = allReports.filter(r => {
+    if (branchF  && !(r.branch_name  || '').toLowerCase().includes(branchF))  return false;
+    if (managerF && !(r.manager_name || '').toLowerCase().includes(managerF)) return false;
+    return true;
+  });
+
+  document.getElementById('tableCount').textContent = filtered.length + ' تقرير';
+  updateKPIs(filtered);
+
+  const tbody = document.getElementById('reportsTbody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="11"><div class="empty">📭 لا توجد تقارير مطابقة</div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((r, i) => {
+    const pct = r.pct || 0;
+    const pctClass = pct >= 85 ? 'pct-high' : pct >= 50 ? 'pct-mid' : 'pct-low';
+    const pctIcon  = pct >= 85 ? '✅' : pct >= 50 ? '⚠️' : '❌';
+    const createdAt = r.created_at ? new Date(r.created_at).toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'}) : '—';
+    const notes = [r.note_open, r.note_huddle, r.note_sales, r.note_field, r.note_cx, r.note_close].filter(Boolean).join(' | ');
+
+    return `<tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong>${r.task_date || '—'}</strong></td>
+      <td>🏪 ${r.branch_name || '—'}</td>
+      <td>👤 ${r.manager_name || '—'}</td>
+      <td><span class="pct-badge ${pctClass}">${pctIcon} ${pct}%</span><br><span style="font-size:11px;color:var(--text3)">${r.total_done||0}/${r.total_tasks||0}</span></td>
+      <td>${(r.closing_pieces||0).toLocaleString()}</td>
+      <td>${(r.closing_invoices||0).toLocaleString()}</td>
+      <td>${(r.closing_customers||0).toLocaleString()}</td>
+      <td style="color:var(--gold);font-weight:700">${(r.closing_sales||0).toLocaleString()}</td>
+      <td><div class="note-cell">${notes || '—'}</div></td>
+      <td style="color:var(--text3)">${createdAt}</td>
+      <td><button class="expand-btn" onclick="openModal(${i}, ${JSON.stringify(filtered).length > 0 ? "filteredData["+i+"]" : 'null'})">🔍 تفاصيل</button></td>
+    </tr>`;
+  }).join('');
+
+  // Store filtered for modal access
+  window.filteredData = filtered;
+
+  // Re-attach expand buttons
+  tbody.querySelectorAll('.expand-btn').forEach((btn, i) => {
+    btn.onclick = () => openModal(filtered[i]);
+  });
+}
+
+function updateKPIs(data) {
+  const d = data || allReports;
+  const total = d.length;
+  const avgPct = total > 0 ? Math.round(d.reduce((s,r) => s + (r.pct||0), 0) / total) : 0;
+  const totalSales = d.reduce((s,r) => s + (r.closing_sales||0), 0);
+  const totalCust  = d.reduce((s,r) => s + (r.closing_customers||0), 0);
+
+  document.getElementById('kpiTotal').textContent     = total.toLocaleString();
+  document.getElementById('kpiAvgPct').textContent    = avgPct + '%';
+  document.getElementById('kpiSales').textContent     = totalSales.toLocaleString();
+  document.getElementById('kpiCustomers').textContent = totalCust.toLocaleString();
+}
+
+function openModal(r) {
+  const secs = ['open','huddle','sales','field','cx','close'];
+  const secRows = secs.map(k => {
+    const done  = r[`sec_${k}_done`] || 0;
+    const total = r[`sec_${k}_total`] || 0;
+    const pct   = total > 0 ? Math.round(done/total*100) : 0;
+    const col   = pct===100 ? 'var(--green)' : pct>0 ? 'var(--gold)' : 'var(--border)';
+    return `<div class="sec-row">
+      <div class="sec-name">${sectionLabels[k]}</div>
+      <div class="sec-track"><div class="sec-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="sec-pct">${done}/${total}</div>
+    </div>`;
+  }).join('');
+
+  const notes = ['open','huddle','sales','field','cx','close']
+    .map(k => r[`note_${k}`] ? `<div class="modal-row"><span class="modal-key">${sectionLabels[k]}</span><span class="modal-val">${r[`note_${k}`]}</span></div>` : '')
+    .filter(Boolean).join('');
+
+  const conv   = r.closing_customers > 0 ? ((r.closing_invoices||0)/r.closing_customers*100).toFixed(1)+'%' : '—';
+  const basket = r.closing_invoices  > 0 ? Math.round((r.closing_sales||0)/r.closing_invoices).toLocaleString() : '—';
+
+  document.getElementById('modalTitle').textContent = `📋 ${r.branch_name || 'فرع'} — ${r.task_date || ''}`;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-row"><span class="modal-key">👤 المدير</span><span class="modal-val">${r.manager_name||'—'}</span></div>
+    <div class="modal-row"><span class="modal-key">📅 التاريخ</span><span class="modal-val">${r.task_date||'—'}</span></div>
+    <div class="modal-row"><span class="modal-key">✅ الإنجاز الكلي</span><span class="modal-val" style="color:var(--accent)">${r.pct||0}% (${r.total_done||0}/${r.total_tasks||0})</span></div>
+    <div style="margin:14px 0 8px;font-size:12px;color:var(--accent);font-weight:700;">📊 تفصيل الأقسام</div>
+    <div class="sec-progress">${secRows}</div>
+    <div style="margin:14px 0 8px;font-size:12px;color:var(--gold);font-weight:700;">💰 أرقام نهاية اليوم</div>
+    <div class="modal-row"><span class="modal-key">🛍️ القطع</span><span class="modal-val">${(r.closing_pieces||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">🧾 الفواتير</span><span class="modal-val">${(r.closing_invoices||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">👥 الزبائن</span><span class="modal-val">${(r.closing_customers||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">💰 المبيعات</span><span class="modal-val" style="color:var(--gold)">${(r.closing_sales||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">📈 Conversion</span><span class="modal-val">${conv}</span></div>
+    <div class="modal-row"><span class="modal-key">🧺 متوسط الفاتورة</span><span class="modal-val">${basket}</span></div>
+    ${notes ? `<div style="margin:14px 0 8px;font-size:12px;color:var(--text2);font-weight:700;">📝 الملاحظات</div>${notes}` : ''}
+  `;
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalBg'))
+    document.getElementById('modalBg').classList.remove('open');
+}
+
+function clearFilters() {
+  document.getElementById('filterFrom').value = '';
+  document.getElementById('filterTo').value = '';
+  document.getElementById('filterBranch').value = '';
+  document.getElementById('filterManager').value = '';
+  renderTable();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Auto refresh every 2 minutes (only after login)
+setInterval(() => { if (document.getElementById("authOverlay").style.display === "none") loadReports(); }, 120000);
+</script>
+</body>
+</html>
