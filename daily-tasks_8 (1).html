@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport"/>
+<title>مهام المدير اليومية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg2: #0f1525;
+  --bg3: #161d30;
+  --card: #1a2235;
+  --card2: #1f2a40;
+  --border: #2a3550;
+  --accent: #00d4aa;
+  --accent2: #0099ff;
+  --accent3: #ff6b35;
+  --gold: #ffc947;
+  --red: #ff4757;
+  --green: #2ed573;
+  --text: #e8edf8;
+  --text2: #8898b8;
+  --text3: #5a6a8a;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Cairo', 'Tajawal', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #0f1a2e 0%, #1a2640 50%, #0d1a30 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  gap: 12px;
+}
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 15px rgba(0,212,170,0.3);
+}
+.logo-title { font-size: 16px; font-weight: 900; color: var(--text); }
+.logo-sub { font-size: 11px; color: var(--accent); font-weight: 600; letter-spacing: 1px; }
+.header-date {
+  font-size: 12px; color: var(--text2);
+  background: var(--bg3);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* MAIN */
+.main { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+
+/* MANAGER INFO */
+.manager-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.manager-card label {
+  display: block;
+  font-size: 11px;
+  color: var(--text2);
+  font-weight: 600;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+.manager-card input, .manager-card select {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  font-size: 13px;
+  padding: 9px 12px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.manager-card input:focus, .manager-card select:focus {
+  border-color: var(--accent);
+}
+.field { flex: 1; min-width: 160px; }
+
+/* PROGRESS BAR */
+.progress-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.progress-circle {
+  position: relative;
+  width: 90px; height: 90px;
+  flex-shrink: 0;
+}
+.progress-circle svg { transform: rotate(-90deg); }
+.progress-circle .track { fill: none; stroke: var(--border); stroke-width: 8; }
+.progress-circle .fill { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round;
+  stroke-dasharray: 226; stroke-dashoffset: 226; transition: stroke-dashoffset 0.5s ease; }
+.progress-circle .label {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-size: 18px; font-weight: 900; color: var(--text);
+}
+.progress-info { flex: 1; }
+.progress-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.progress-sub { font-size: 12px; color: var(--text2); }
+.section-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.sec-bar-row { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.sec-bar-label { width: 140px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sec-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.sec-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.4s; }
+.sec-bar-val { width: 40px; text-align: left; color: var(--text3); font-size: 11px; }
+
+/* SECTION CARD */
+.section-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+  gap: 12px;
+}
+.section-header:hover { background: var(--card2); }
+.section-header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+.section-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.section-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.section-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.section-badge {
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  white-space: nowrap;
+}
+.badge-done { background: rgba(46,213,115,0.15); color: var(--green); }
+.badge-partial { background: rgba(255,201,71,0.15); color: var(--gold); }
+.badge-empty { background: rgba(255,71,87,0.12); color: var(--red); }
+.chevron { color: var(--text3); font-size: 14px; transition: transform 0.3s; flex-shrink: 0; }
+.section-card.open .chevron { transform: rotate(180deg); }
+
+/* SECTION BODY */
+.section-body { display: none; padding: 0 20px 20px; }
+.section-card.open .section-body { display: block; }
+
+/* TASKS */
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: 4px;
+}
+.task-item:hover { background: var(--bg3); }
+.task-check {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+  transition: all 0.2s;
+  font-size: 13px;
+}
+.task-item.checked .task-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.task-item.checked .task-check::after { content: '✓'; color: #0a0e1a; font-weight: 900; }
+.task-text {
+  font-size: 13px; color: var(--text2); line-height: 1.5;
+  transition: color 0.2s;
+}
+.task-item.checked .task-text {
+  color: var(--text3);
+  text-decoration: line-through;
+}
+
+/* NOTE */
+.note-area {
+  margin-top: 14px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.note-label {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text3);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border);
+}
+.note-area textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  padding: 10px 12px;
+  resize: vertical;
+  min-height: 60px;
+  outline: none;
+  direction: rtl;
+}
+.note-area textarea::placeholder { color: var(--text3); }
+
+/* SUBMIT */
+.submit-area {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+.submit-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #0a0e1a;
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  width: 100%;
+  max-width: 400px;
+  letter-spacing: 0.5px;
+}
+.submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--card2); border: 1px solid var(--accent);
+  color: var(--text); padding: 12px 24px; border-radius: 30px;
+  font-size: 13px; font-weight: 600; z-index: 999;
+  transition: transform 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+@media(max-width:600px) {
+  .manager-card { flex-direction: column; }
+  .field { min-width: 100%; }
+  .sec-bar-label { width: 110px; }
+}
+
+/* CLOSING NUMBERS */
+.closing-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.num-field label {
+  display: block;
+  font-size: 11px;
+  color: var(--text2);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.num-field input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  text-align: center;
+}
+.num-field input:focus { border-color: var(--accent); }
+.closing-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+.cstat {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: center;
+}
+.cstat-label { font-size: 10px; color: var(--text3); font-weight: 600; margin-bottom: 4px; }
+.cstat-value { font-size: 18px; font-weight: 900; color: var(--accent); }
+@media(max-width:500px){
+  .closing-numbers { grid-template-columns: 1fr; }
+  .closing-stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* AUTH OVERLAY */
+.auth-overlay {
+  position: fixed; inset: 0;
+  background: #0a0e1a;
+  z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.auth-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 32px;
+  width: 100%; max-width: 400px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+.auth-logo {
+  text-align: center; margin-bottom: 28px;
+}
+.auth-logo-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 8px 24px rgba(0,212,170,0.3);
+  margin-bottom: 14px;
+}
+.auth-title { font-size: 20px; font-weight: 900; color: var(--text); }
+.auth-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.auth-field { margin-bottom: 16px; }
+.auth-field label {
+  display: block; font-size: 12px; color: var(--text2);
+  font-weight: 600; margin-bottom: 8px; letter-spacing: 0.5px;
+}
+.auth-field input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+  direction: ltr;
+}
+.auth-field input:focus { border-color: var(--accent); }
+.auth-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; border-radius: var(--radius-sm);
+  color: #0a0e1a; font-family: 'Cairo', sans-serif;
+  font-size: 15px; font-weight: 900;
+  padding: 14px; cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-top: 8px;
+}
+.auth-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.auth-error {
+  background: rgba(255,71,87,0.12);
+  border: 1px solid rgba(255,71,87,0.3);
+  color: var(--red); border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 12px; font-weight: 600;
+  margin-top: 14px; display: none; text-align: center;
+}
+
+/* LOGOUT BTN */
+.logout-btn {
+  background: rgba(255,71,87,0.12);
+  border: 1px solid rgba(255,71,87,0.2);
+  border-radius: 20px; color: var(--red);
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px; font-weight: 600;
+  padding: 6px 14px; cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.logout-btn:hover { background: rgba(255,71,87,0.22); }
+.user-badge {
+  font-size: 11px; color: var(--text2);
+  background: var(--bg3); border: 1px solid var(--border);
+  padding: 5px 10px; border-radius: 20px;
+  max-width: 140px; overflow: hidden;
+  text-overflow: ellipsis; white-space: nowrap;
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<!-- AUTH OVERLAY -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">📋</div>
+      <div class="auth-title">مهام المدير اليومية</div>
+      <div class="auth-sub">LAZURDE &amp; MANISA • تسجيل الدخول</div>
+    </div>
+    <div class="auth-field">
+      <label>📧 البريد الإلكتروني</label>
+      <input type="email" id="authEmail" placeholder="example@company.com" autocomplete="email">
+    </div>
+    <div class="auth-field">
+      <label>🔒 كلمة المرور</label>
+      <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="auth-btn" id="authBtn" onclick="doLogin()">🚀 دخول</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">📋</div>
+      <div>
+        <div class="logo-title">مهام المدير اليومية</div>
+        <div class="logo-sub">LAZURDE & MANISA</div>
+      </div>
+    </div>
+    <div class="header-date" id="headerDate">--</div>
+    <div style="display:flex;align-items:center;gap:8px;" id="headerAuth" style="display:none">
+      <div class="user-badge" id="userBadge"></div>
+      <button class="logout-btn" onclick="doLogout()">خروج 🚪</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="manager-card">
+    <div class="field">
+      <label>👤 اسم المدير</label>
+      <input type="text" id="managerName" placeholder="أدخل اسمك...">
+    </div>
+    <div class="field">
+      <label>🏪 الفرع</label>
+      <input type="text" id="branchName" placeholder="اسم الفرع...">
+    </div>
+    <div class="field">
+      <label>📅 التاريخ</label>
+      <input type="date" id="taskDate">
+    </div>
+  </div>
+
+  <div class="progress-card">
+    <div class="progress-circle">
+      <svg width="90" height="90" viewBox="0 0 90 90">
+        <circle class="track" cx="45" cy="45" r="36"/>
+        <circle class="fill" id="progressArc" cx="45" cy="45" r="36"/>
+      </svg>
+      <div class="label" id="progressPct">0%</div>
+    </div>
+    <div class="progress-info">
+      <div class="progress-title">إجمالي الإنجاز اليومي</div>
+      <div class="progress-sub" id="progressCount">0 / 0 مهمة منجزة</div>
+      <div class="section-bars" id="sectionBars"></div>
+    </div>
+  </div>
+
+  <div class="section-card" id="sec-open">
+    <div class="section-header" onclick="toggleSection('open')">
+      <div class="section-header-left">
+        <div class="section-icon" style="background:rgba(0,212,170,0.15);">🔓</div>
+        <div>
+          <div class="section-title">إجراءات فتح الفرع</div>
+          <div class="section-sub">7 مهام • الحضور والجاهزية</div>
+        </div>
+      </div>
+      <span class="section-badge badge-empty" id="badge-open">0 / 7</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div id="tasks-open">
+        <div class="task-item" onclick="toggleTask(this,'open')">
+          <div class="task-check"></div>
+          <div class="task-text">الوصول قبل 30 دقيقة من وقت فتح الفرع الرسمي</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'open')">
+          <div class="task-check"></div>
+          <div class="task-text">فتح النظام وتسجيل الدخول والتحقق من عمله بشكل صحيح</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'open')">
+          <div class="task-check"></div>
+          <div class="task-text">فتح جلسة المبيعات اليومية وتسجيل تاريخ ووقت الفتح</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'open')">
+          <div class="task-check"></div>
+          <div class="task-text">التحقق من الإنارة الكاملة وتبليغ الصيانة فوراً عن أي عطل</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'open')">
+          <div class="task-check"></div>
+          <div class="task-text">مراجعة نظافة الفرع وجاهزيته قبل دخول الزبائن</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'open')">
+          <div class="task-check"></div>
+          <div class="task-text">مراجعة جدول الدوام وتحديد من يغطي كل منطقة اليوم</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'open')">
+          <div class="task-check"></div>
+          <div class="task-text">تسجيل حضور الموظفين — أي غياب يُبلَّغ لمدير المنطقة خلال 15 دقيقة</div>
+        </div>
+      </div>
+      <div class="note-area">
+        <div class="note-label">📝 ملاحظات القسم</div>
+        <textarea id="note-open" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card" id="sec-huddle">
+    <div class="section-header" onclick="toggleSection('huddle')">
+      <div class="section-header-left">
+        <div class="section-icon" style="background:rgba(0,153,255,0.15);">🤝</div>
+        <div>
+          <div class="section-title">اجتماع منتصف اليوم</div>
+          <div class="section-sub">6 مهام • تحضير الفريق</div>
+        </div>
+      </div>
+      <span class="section-badge badge-empty" id="badge-huddle">0 / 6</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div id="tasks-huddle">
+        <div class="task-item" onclick="toggleTask(this,'huddle')">
+          <div class="task-check"></div>
+          <div class="task-text">جمع الفريق لمدة 10 دقائق قبل بدء العمل</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')">
+          <div class="task-check"></div>
+          <div class="task-text">مراجعة هدف المبيعات اليوم ومقارنته بالأمس</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')">
+          <div class="task-check"></div>
+          <div class="task-text">تحديد منتج اليوم أو القطعة التي يجب التركيز على بيعها</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')">
+          <div class="task-check"></div>
+          <div class="task-text">توزيع المناطق والمهام على كل موظف بوضوح</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')">
+          <div class="task-check"></div>
+          <div class="task-text">تذكير بأي تعليمات أو عروض خاصة لليوم</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')">
+          <div class="task-check"></div>
+          <div class="task-text">توقيع الموظفين على سجل الاجتماع اليوم</div>
+        </div>
+      </div>
+      <div class="note-area">
+        <div class="note-label">📝 ملاحظات القسم</div>
+        <textarea id="note-huddle" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card" id="sec-sales">
+    <div class="section-header" onclick="toggleSection('sales')">
+      <div class="section-header-left">
+        <div class="section-icon" style="background:rgba(255,201,71,0.15);">📈</div>
+        <div>
+          <div class="section-title">متابعة المبيعات والأهداف</div>
+          <div class="section-sub">5 مهام • الرقابة والتحليل</div>
+        </div>
+      </div>
+      <span class="section-badge badge-empty" id="badge-sales">0 / 5</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div id="tasks-sales">
+        <div class="task-item" onclick="toggleTask(this,'sales')">
+          <div class="task-check"></div>
+          <div class="task-text">مراجعة تقرير المبيعات من النظام كل ساعتين</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'sales')">
+          <div class="task-check"></div>
+          <div class="task-text">مقارنة المبيعات الفعلية بالهدف اليومي</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'sales')">
+          <div class="task-check"></div>
+          <div class="task-text">عند التأخر عن الهدف بـ30% — توجيه الموظفين فوراً وتعديل الأسلوب</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'sales')">
+          <div class="task-check"></div>
+          <div class="task-text">تتبع Conversion Rate خلال اليوم</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'sales')">
+          <div class="task-check"></div>
+          <div class="task-text">تسجيل ملاحظة عن سبب الانخفاض إذا وُجد</div>
+        </div>
+      </div>
+      <div class="note-area">
+        <div class="note-label">📝 ملاحظات القسم</div>
+        <textarea id="note-sales" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card" id="sec-field">
+    <div class="section-header" onclick="toggleSection('field')">
+      <div class="section-header-left">
+        <div class="section-icon" style="background:rgba(255,107,53,0.15);">👁️</div>
+        <div>
+          <div class="section-title">الإشراف الميداني على الموظفين</div>
+          <div class="section-sub">4 مهام • المتابعة والرقابة</div>
+        </div>
+      </div>
+      <span class="section-badge badge-empty" id="badge-field">0 / 4</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div id="tasks-field">
+        <div class="task-item" onclick="toggleTask(this,'field')">
+          <div class="task-check"></div>
+          <div class="task-text">جولة ميدانية على الفرع بالكامل كل ساعة على الأقل</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'field')">
+          <div class="task-check"></div>
+          <div class="task-text">التحقق من التزام كل موظف بمنطقته ومهمته المحددة</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'field')">
+          <div class="task-check"></div>
+          <div class="task-text">مراقبة تعامل الموظفين مع الزبائن والتدخل الفوري عند الخطأ</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'field')">
+          <div class="task-check"></div>
+          <div class="task-text">التأكد من أن موظف الخدمة لا يتواجد في صالة البيع أثناء وجود الزبائن</div>
+        </div>
+      </div>
+      <div class="note-area">
+        <div class="note-label">📝 ملاحظات القسم</div>
+        <textarea id="note-field" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="section-card" id="sec-cx">
+    <div class="section-header" onclick="toggleSection('cx')">
+      <div class="section-header-left">
+        <div class="section-icon" style="background:rgba(255,201,71,0.15);">🛍️</div>
+        <div>
+          <div class="section-title">إدارة تجربة الزبون</div>
+          <div class="section-sub">4 مهام • رضا الزبائن والخدمة</div>
+        </div>
+      </div>
+      <span class="section-badge badge-empty" id="badge-cx">0 / 4</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div id="tasks-cx">
+        <div class="task-item" onclick="toggleTask(this,'cx')">
+          <div class="task-check"></div>
+          <div class="task-text">مراقبة وقت الخدمة — لا يبقى الزبون دون خدمة أكثر من دقيقتين</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'cx')">
+          <div class="task-check"></div>
+          <div class="task-text">التدخل الفوري في حالات الشكوى أو عدم الرضا</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'cx')">
+          <div class="task-check"></div>
+          <div class="task-text">التأكد من توفر الملصقات للعروض والأسعار بوضوح</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'cx')">
+          <div class="task-check"></div>
+          <div class="task-text">تسجيل شكاوى الزبائن مع الإجراء المتخذ (تُذكر في ملاحظات التقرير)</div>
+        </div>
+      </div>
+      <div class="note-area">
+        <div class="note-label">📝 شكاوى الزبائن وملاحظات الخدمة</div>
+        <textarea id="note-cx" placeholder="سجّل أي شكوى أو ملاحظة خاصة بتجربة الزبون اليوم..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card" id="sec-close">
+    <div class="section-header" onclick="toggleSection('close')">
+      <div class="section-header-left">
+        <div class="section-icon" style="background:rgba(255,71,87,0.15);">🔒</div>
+        <div>
+          <div class="section-title">إجراءات إغلاق الفرع اليومي</div>
+          <div class="section-sub">3 مهام • الإغلاق والمطابقة</div>
+        </div>
+      </div>
+      <span class="section-badge badge-empty" id="badge-close">0 / 3</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div id="tasks-close">
+        <div class="task-item" onclick="toggleTask(this,'close')">
+          <div class="task-check"></div>
+          <div class="task-text">مراقبة إغلاق جلسات الكاشير ومطابقة الكاشير بعد الغلق</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'close')">
+          <div class="task-check"></div>
+          <div class="task-text">مراجعة تقرير المبيعات اليومي وتسجيل الأرقام الختامية</div>
+        </div>
+        <div class="task-item" onclick="toggleTask(this,'close')">
+          <div class="task-check"></div>
+          <div class="task-text">التأكد من إغلاق جميع الأجهزة والأضواء وتأمين الفرع</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:12px;letter-spacing:0.5px;">📊 أرقام نهاية اليوم</div>
+      <div class="closing-numbers">
+        <div class="num-field">
+          <label>🛍️ عدد القطع المباعة</label>
+          <input type="number" id="closingPieces" placeholder="0" min="0" oninput="calcClosing()">
+        </div>
+        <div class="num-field">
+          <label>🧾 عدد الفواتير</label>
+          <input type="number" id="closingInvoices" placeholder="0" min="0" oninput="calcClosing()">
+        </div>
+        <div class="num-field">
+          <label>👥 عدد الزبائن الذين دخلوا</label>
+          <input type="number" id="closingCustomers" placeholder="0" min="0" oninput="calcClosing()">
+        </div>
+        <div class="num-field">
+          <label>💰 إجمالي المبيعات (د.ع)</label>
+          <input type="number" id="closingSales" placeholder="0" min="0" oninput="calcClosing()">
+        </div>
+      </div>
+      <div class="closing-stats" id="closingStats" style="display:none;">
+        <div class="cstat">
+          <div class="cstat-label">Conversion Rate</div>
+          <div class="cstat-value" id="cstatConv">—</div>
+        </div>
+        <div class="cstat">
+          <div class="cstat-label">متوسط الفاتورة</div>
+          <div class="cstat-value" id="cstatBasket">—</div>
+        </div>
+        <div class="cstat">
+          <div class="cstat-label">قطع / فاتورة</div>
+          <div class="cstat-value" id="cstatUPT">—</div>
+        </div>
+      </div>
+
+      <div class="note-area" style="margin-top:14px;">
+        <div class="note-label">📝 ملاحظات الإغلاق</div>
+        <textarea id="note-close" placeholder="أي ملاحظة عن نهاية اليوم..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-area">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">
+      أكمل جميع الأقسام قبل إرسال التقرير
+    </div>
+    <button class="submit-btn" onclick="submitReport()">
+      📤 إرسال التقرير اليومي
+    </button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+// ── Supabase Config ──────────────────────────────────────
+const SUPABASE_URL = 'https://srtutwgpbllrrdzgouje.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_25A9gDLPWTvHNjjd1rWJAg_HQuFxf7d';
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── AUTH ──────────────────────────────────────────────────
+async function checkAuth() {
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session) {
+    await verifyRole(session.user);
+  } else {
+    document.getElementById('authOverlay').style.display = 'flex';
+  }
+}
+
+async function verifyRole(user) {
+  const { data, error } = await _sb
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single();
+  if (error || !data || data.role !== 'manager') {
+    await _sb.auth.signOut();
+    showAuthError('⛔ غير مصرح — هذه الصفحة للمديرين فقط');
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('authBtn').disabled = false;
+    document.getElementById('authBtn').textContent = '🚀 دخول';
+    return;
+  }
+  showApp(data.user ?? user);
+}
+
+function showApp(user) {
+  document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('headerAuth').style.display = 'flex';
+  const email = user.email || '';
+  document.getElementById('userBadge').textContent = '👤 ' + email;
+  if (!document.getElementById('managerName').value) {
+    const nameFromEmail = email.split('@')[0].replace(/[._]/g, ' ');
+    document.getElementById('managerName').value = nameFromEmail;
+  }
+}
+
+async function doLogin() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass  = document.getElementById('authPassword').value;
+  const btn   = document.getElementById('authBtn');
+  const errEl = document.getElementById('authError');
+  errEl.style.display = 'none';
+  if (!email || !pass) { showAuthError('أدخل الإيميل وكلمة المرور'); return; }
+  btn.disabled = true; btn.textContent = '⏳ جاري الدخول...';
+  const { data, error } = await _sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    showAuthError('❌ بيانات غير صحيحة، تحقق من الإيميل أو كلمة المرور');
+    btn.disabled = false; btn.textContent = '🚀 دخول';
+  } else {
+    await verifyRole(data.user);
+  }
+}
+
+function showAuthError(msg) {
+  const e = document.getElementById('authError');
+  e.textContent = msg; e.style.display = 'block';
+}
+
+async function doLogout() {
+  await _sb.auth.signOut();
+  document.getElementById('headerAuth').style.display = 'none';
+  document.getElementById('authOverlay').style.display = 'flex';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authError').style.display = 'none';
+  document.getElementById('authBtn').disabled = false;
+  document.getElementById('authBtn').textContent = '🚀 دخول';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('authPassword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('authEmail').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('authPassword').focus();
+  });
+  checkAuth();
+});
+
+const sections = {
+  open:   { total: 7, done: 0 },
+  huddle: { total: 6, done: 0 },
+  sales:  { total: 5, done: 0 },
+  field:  { total: 4, done: 0 },
+  cx:     { total: 4, done: 0 },
+  close:  { total: 3, done: 0 },
+};
+const sectionLabels = {
+  open:   'فتح الفرع',
+  huddle: 'اجتماع اليوم',
+  sales:  'متابعة المبيعات',
+  field:  'الإشراف الميداني',
+  cx:     'تجربة الزبون',
+  close:  'إغلاق الفرع',
+};
+
+// Set today's date
+document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+
+// Update header date
+function updateDate() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('headerDate').textContent = dateStr;
+}
+updateDate();
+setInterval(updateDate, 60000);
+
+function toggleSection(id) {
+  const card = document.getElementById('sec-' + id);
+  card.classList.toggle('open');
+}
+
+function toggleTask(el, secId) {
+  el.classList.toggle('checked');
+  recalcSection(secId);
+}
+
+function recalcSection(secId) {
+  const container = document.getElementById('tasks-' + secId);
+  const tasks = container.querySelectorAll('.task-item');
+  const done = container.querySelectorAll('.task-item.checked').length;
+  const total = tasks.length;
+  sections[secId].done = done;
+
+  const badge = document.getElementById('badge-' + secId);
+  badge.textContent = done + ' / ' + total;
+  if (done === 0) { badge.className = 'section-badge badge-empty'; }
+  else if (done === total) { badge.className = 'section-badge badge-done'; }
+  else { badge.className = 'section-badge badge-partial'; }
+
+  updateProgress();
+}
+
+function updateProgress() {
+  let totalDone = 0, totalAll = 0;
+  Object.keys(sections).forEach(k => {
+    totalDone += sections[k].done;
+    totalAll  += sections[k].total;
+  });
+  const pct = totalAll > 0 ? Math.round(totalDone / totalAll * 100) : 0;
+
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressCount').textContent = totalDone + ' / ' + totalAll + ' مهمة منجزة';
+
+  const arc = document.getElementById('progressArc');
+  const circumference = 226;
+  arc.style.strokeDashoffset = circumference - (circumference * pct / 100);
+  arc.style.stroke = pct >= 85 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--accent)';
+
+  const bars = document.getElementById('sectionBars');
+  bars.innerHTML = Object.keys(sections).map(k => {
+    const s = sections[k];
+    const p = s.total > 0 ? Math.round(s.done / s.total * 100) : 0;
+    const col = p === 100 ? 'var(--green)' : p > 0 ? 'var(--gold)' : 'var(--border)';
+    return `<div class="sec-bar-row">
+      <div class="sec-bar-label">${sectionLabels[k]}</div>
+      <div class="sec-bar-track"><div class="sec-bar-fill" style="width:${p}%;background:${col}"></div></div>
+      <div class="sec-bar-val">${p}%</div>
+    </div>`;
+  }).join('');
+}
+
+
+function calcClosing() {
+  const pieces   = parseFloat(document.getElementById('closingPieces').value) || 0;
+  const invoices = parseFloat(document.getElementById('closingInvoices').value) || 0;
+  const customers= parseFloat(document.getElementById('closingCustomers').value) || 0;
+  const sales    = parseFloat(document.getElementById('closingSales').value) || 0;
+
+  const statsEl = document.getElementById('closingStats');
+  if (pieces + invoices + customers + sales === 0) { statsEl.style.display = 'none'; return; }
+  statsEl.style.display = 'grid';
+
+  const conv   = customers > 0 ? (invoices / customers * 100).toFixed(1) + '%' : '—';
+  const basket = invoices  > 0 ? Math.round(sales / invoices).toLocaleString() : '—';
+  const upt    = invoices  > 0 ? (pieces / invoices).toFixed(1) : '—';
+
+  document.getElementById('cstatConv').textContent   = conv;
+  document.getElementById('cstatBasket').textContent = basket;
+  document.getElementById('cstatUPT').textContent    = upt;
+}
+
+// Fixed: Added 'async' keyword to use 'await'
+async function submitReport() {
+  const manager = document.getElementById('managerName').value.trim();
+  const branch  = document.getElementById('branchName').value.trim();
+  const date    = document.getElementById('taskDate').value;
+
+  if (!manager) { showToast('⚠️ أدخل اسم المدير أولاً'); return; }
+  if (!branch)  { showToast('⚠️ أدخل اسم الفرع أولاً'); return; }
+
+  let totalDone = 0, totalAll = 0;
+  Object.keys(sections).forEach(k => { totalDone += sections[k].done; totalAll += sections[k].total; });
+  const pct = totalAll > 0 ? Math.round(totalDone / totalAll * 100) : 0;
+
+  const payload = {
+    manager_name:      manager,
+    branch_name:       branch,
+    task_date:         date,
+    sec_open_done:     sections.open.done,
+    sec_open_total:    sections.open.total,
+    sec_huddle_done:   sections.huddle.done,
+    sec_huddle_total:  sections.huddle.total,
+    sec_sales_done:    sections.sales.done,
+    sec_sales_total:   sections.sales.total,
+    sec_field_done:    sections.field.done,
+    sec_field_total:   sections.field.total,
+    sec_cx_done:       sections.cx.done,
+    sec_cx_total:      sections.cx.total,
+    sec_close_done:    sections.close.done,
+    sec_close_total:   sections.close.total,
+    total_done:        totalDone,
+    total_tasks:       totalAll,
+    pct:               pct,
+    closing_pieces:    parseInt(document.getElementById('closingPieces').value) || 0,
+    closing_invoices:  parseInt(document.getElementById('closingInvoices').value) || 0,
+    closing_customers: parseInt(document.getElementById('closingCustomers').value) || 0,
+    closing_sales:     parseFloat(document.getElementById('closingSales').value) || 0,
+    note_open:         document.getElementById('note-open').value.trim(),
+    note_huddle:       document.getElementById('note-huddle').value.trim(),
+    note_sales:        document.getElementById('note-sales').value.trim(),
+    note_field:        document.getElementById('note-field').value.trim(),
+    note_cx:           document.getElementById('note-cx').value.trim(),
+    note_close:        document.getElementById('note-close').value.trim(),
+  };
+
+  const btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري الإرسال...';
+
+  try {
+    const { error } = await _sb.from('daily_reports').insert([payload]);
+    if (error) throw error;
+    showToast('✅ تم إرسال التقرير وحفظه بنجاح!');
+    btn.textContent = '✅ تم الإرسال';
+    btn.style.background = 'linear-gradient(135deg, var(--green), #00b894)';
+  } catch(err) {
+    console.error(err);
+    showToast('❌ خطأ في الإرسال: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = '📤 إرسال التقرير اليومي';
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Init progress
+updateProgress();
+</script>
+</body>
+</html>
