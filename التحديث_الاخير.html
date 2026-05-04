@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0" name="viewport"/>
+<title>LAZURDE & MANISA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #0a0e1a; --bg2: #0f1525; --bg3: #161d30;
+  --card: #1a2235; --card2: #1f2a40; --border: #2a3550;
+  --accent: #00d4aa; --accent2: #0099ff; --accent3: #ff6b35;
+  --gold: #ffc947; --red: #ff4757; --green: #2ed573;
+  --text: #e8edf8; --text2: #8898b8; --text3: #5a6a8a;
+  --radius: 14px; --radius-sm: 8px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Cairo','Tajawal',Arial,sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg2); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── AUTH ── */
+.auth-overlay {
+  position: fixed; inset: 0; background: #0a0e1a; z-index: 99999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; min-height: 100dvh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.auth-box {
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 40px 32px; width: 100%; max-width: 400px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+}
+.auth-logo { text-align: center; margin-bottom: 28px; }
+.auth-logo-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 18px; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 30px; box-shadow: 0 8px 24px rgba(0,212,170,0.3); margin-bottom: 14px;
+}
+.auth-title { font-size: 20px; font-weight: 900; color: var(--text); }
+.auth-sub { font-size: 12px; color: var(--text2); margin-top: 4px; }
+.auth-field { margin-bottom: 16px; }
+.auth-field label { display: block; font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: 8px; letter-spacing: 0.5px; }
+.auth-field input {
+  width: 100%; background: var(--bg3); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: 'Cairo', sans-serif; font-size: 14px;
+  padding: 12px 14px; outline: none; transition: border-color 0.2s; direction: ltr;
+}
+.auth-field input:focus { border-color: var(--accent); }
+.auth-btn {
+  width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none; border-radius: var(--radius-sm); color: #0a0e1a;
+  font-family: 'Cairo', sans-serif; font-size: 15px; font-weight: 900;
+  padding: 14px; cursor: pointer; transition: opacity 0.2s, transform 0.1s; margin-top: 8px;
+}
+.auth-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.auth-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.auth-error {
+  background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.3);
+  color: var(--red); border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 12px; font-weight: 600;
+  margin-top: 14px; display: none; text-align: center;
+}
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(135deg,#0f1a2e,#1a2640,#0d1a30);
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; max-width: 1400px; margin: 0 auto; gap: 12px; flex-wrap: wrap;
+}
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; box-shadow: 0 4px 15px rgba(0,212,170,0.3);
+}
+.logo-title { font-size: 16px; font-weight: 900; }
+.logo-sub { font-size: 11px; color: var(--accent); font-weight: 600; letter-spacing: 1px; }
+.header-date { font-size: 12px; color: var(--text2); background: var(--bg3); padding: 6px 12px; border-radius: 20px; border: 1px solid var(--border); white-space: nowrap; }
+.user-badge { font-size: 11px; color: var(--text2); background: var(--bg3); border: 1px solid var(--border); padding: 5px 10px; border-radius: 20px; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.logout-btn { background: rgba(255,71,87,0.12); border: 1px solid rgba(255,71,87,0.2); border-radius: 20px; color: var(--red); font-family: 'Cairo', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 14px; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+.logout-btn:hover { background: rgba(255,71,87,0.22); }
+.refresh-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--accent); padding: 8px 16px; border-radius: var(--radius-sm); cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+.refresh-btn:hover { background: var(--card2); border-color: var(--accent); }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--card2); border: 1px solid var(--accent); color: var(--text); padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: 600; z-index: 9999; transition: transform 0.3s ease; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ════════════════════════════════════════
+   MANAGER VIEW
+════════════════════════════════════════ */
+.main-manager { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+
+.manager-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+.manager-card label { display: block; font-size: 11px; color: var(--text2); font-weight: 600; margin-bottom: 6px; letter-spacing: 0.5px; }
+.manager-card input, .manager-card select { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'Cairo', sans-serif; font-size: 13px; padding: 9px 12px; width: 100%; outline: none; transition: border-color 0.2s; }
+.manager-card input:focus, .manager-card select:focus { border-color: var(--accent); }
+.field { flex: 1; min-width: 160px; }
+
+.progress-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px; }
+.progress-circle { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+.progress-circle svg { transform: rotate(-90deg); }
+.progress-circle .track { fill: none; stroke: var(--border); stroke-width: 8; }
+.progress-circle .fill { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 226; stroke-dashoffset: 226; transition: stroke-dashoffset 0.5s ease; }
+.progress-circle .label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 18px; font-weight: 900; color: var(--text); }
+.progress-info { flex: 1; }
+.progress-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.progress-sub { font-size: 12px; color: var(--text2); }
+.section-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.sec-bar-row { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.sec-bar-label { width: 140px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sec-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.sec-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.4s; }
+.sec-bar-val { width: 40px; text-align: left; color: var(--text3); font-size: 11px; }
+
+.section-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; box-shadow: var(--shadow); }
+.section-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; cursor: pointer; user-select: none; transition: background 0.2s; gap: 12px; }
+.section-header:hover { background: var(--card2); }
+.section-header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+.section-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.section-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.section-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.section-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.badge-done { background: rgba(46,213,115,0.15); color: var(--green); }
+.badge-partial { background: rgba(255,201,71,0.15); color: var(--gold); }
+.badge-empty { background: rgba(255,71,87,0.12); color: var(--red); }
+.chevron { color: var(--text3); font-size: 14px; transition: transform 0.3s; flex-shrink: 0; }
+.section-card.open .chevron { transform: rotate(180deg); }
+.section-body { display: none; padding: 0 20px 20px; }
+.section-card.open .section-body { display: block; }
+
+.task-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 12px; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s; margin-bottom: 4px; }
+.task-item:hover { background: var(--bg3); }
+.task-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all 0.2s; font-size: 13px; }
+.task-item.checked .task-check { background: var(--accent); border-color: var(--accent); }
+.task-item.checked .task-check::after { content: '✓'; color: #0a0e1a; font-weight: 900; }
+.task-text { font-size: 13px; color: var(--text2); line-height: 1.5; transition: color 0.2s; }
+.task-item.checked .task-text { color: var(--text3); text-decoration: line-through; }
+
+.note-area { margin-top: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.note-label { padding: 8px 12px; font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+.note-area textarea { width: 100%; background: transparent; border: none; color: var(--text); font-family: 'Cairo', sans-serif; font-size: 12px; padding: 10px 12px; resize: vertical; min-height: 60px; outline: none; direction: rtl; }
+.note-area textarea::placeholder { color: var(--text3); }
+
+.closing-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.num-field label { display: block; font-size: 11px; color: var(--text2); font-weight: 600; margin-bottom: 6px; }
+.num-field input { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'Cairo', sans-serif; font-size: 18px; font-weight: 700; padding: 10px 12px; outline: none; transition: border-color 0.2s; text-align: center; }
+.num-field input:focus { border-color: var(--accent); }
+.closing-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 4px; }
+.cstat { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px; text-align: center; }
+.cstat-label { font-size: 10px; color: var(--text3); font-weight: 600; margin-bottom: 4px; }
+.cstat-value { font-size: 18px; font-weight: 900; color: var(--accent); }
+
+.submit-area { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-top: 20px; text-align: center; }
+.submit-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: var(--radius-sm); color: #0a0e1a; font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 900; padding: 14px 40px; cursor: pointer; transition: opacity 0.2s, transform 0.1s; width: 100%; max-width: 400px; letter-spacing: 0.5px; }
+.submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+@media(max-width:600px) { .manager-card { flex-direction: column; } .field { min-width: 100%; } .sec-bar-label { width: 110px; } }
+@media(max-width:500px) { .closing-numbers { grid-template-columns: 1fr; } .closing-stats { grid-template-columns: 1fr 1fr; } }
+
+/* ════════════════════════════════════════
+   DASHBOARD VIEW
+════════════════════════════════════════ */
+.filters { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 20px; }
+.filters-inner { max-width: 1400px; margin: 0 auto; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.filter-input { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'Cairo', sans-serif; font-size: 13px; padding: 8px 12px; outline: none; transition: border-color 0.2s; }
+.filter-input:focus { border-color: var(--accent); }
+.filter-label { font-size: 12px; color: var(--text2); font-weight: 600; }
+
+.main-dashboard { max-width: 1400px; margin: 0 auto; padding: 20px 16px 60px; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+@media(max-width:900px){ .kpi-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:500px){ .kpi-grid { grid-template-columns: 1fr; } }
+.kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; position: relative; overflow: hidden; }
+.kpi-card::before { content: ''; position: absolute; top: 0; right: 0; width: 3px; height: 100%; border-radius: 0 var(--radius) var(--radius) 0; }
+.kpi-card.green::before { background: var(--green); } .kpi-card.gold::before { background: var(--gold); } .kpi-card.blue::before { background: var(--accent2); } .kpi-card.accent::before { background: var(--accent); }
+.kpi-icon { font-size: 24px; margin-bottom: 8px; }
+.kpi-label { font-size: 11px; color: var(--text2); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+.kpi-value { font-size: 28px; font-weight: 900; }
+.kpi-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+.table-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.table-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+.table-title { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.table-count { font-size: 12px; color: var(--text2); background: var(--bg3); padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 900px; }
+thead tr { background: var(--bg3); }
+th { padding: 11px 14px; text-align: right; font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: 0.5px; white-space: nowrap; border-bottom: 1px solid var(--border); }
+td { padding: 12px 14px; font-size: 13px; border-bottom: 1px solid rgba(42,53,80,0.4); white-space: nowrap; }
+tbody tr { transition: background 0.15s; } tbody tr:hover { background: var(--card2); } tbody tr:last-child td { border-bottom: none; }
+
+.pct-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.pct-high { background: rgba(46,213,115,0.15); color: var(--green); }
+.pct-mid  { background: rgba(255,201,71,0.15); color: var(--gold); }
+.pct-low  { background: rgba(255,71,87,0.12); color: var(--red); }
+
+.note-cell { max-width: 180px; overflow: hidden; text-overflow: ellipsis; color: var(--text2); font-size: 12px; }
+.expand-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 12px; font-family: 'Cairo', sans-serif; padding: 0; }
+.pdf-btn { background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.3); border-radius: 8px; color: var(--accent); font-family: 'Cairo', sans-serif; font-size: 11px; font-weight: 700; padding: 4px 10px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+.pdf-btn:hover { background: rgba(0,212,170,0.2); border-color: var(--accent); }
+
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+.modal-bg.open { display: flex; }
+.modal { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow); }
+.modal-title { font-size: 16px; font-weight: 900; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.modal-close { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 20px; }
+.modal-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(42,53,80,0.4); font-size: 13px; }
+.modal-row:last-child { border-bottom: none; }
+.modal-key { color: var(--text2); } .modal-val { color: var(--text); font-weight: 600; text-align: left; max-width: 60%; word-break: break-word; }
+.sec-progress { margin-top: 12px; }
+.sec-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+.sec-name { width: 140px; color: var(--text2); }
+.sec-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.sec-fill { height: 100%; border-radius: 4px; background: var(--accent); }
+.sec-pct { width: 40px; color: var(--text3); font-size: 11px; text-align: left; }
+
+.loading { text-align: center; padding: 60px 20px; color: var(--text2); }
+.loading-spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 60px 20px; color: var(--text3); font-size: 14px; }
+
+/* PDF */
+@media print { body > *:not(#pdfPage) { display: none !important; } #pdfPage { display: block !important; } @page { margin: 15mm; size: A4; } }
+#pdfPage { display: none; font-family: 'Cairo','Tajawal',sans-serif; direction: rtl; background: #fff; color: #1a1a2e; padding: 32px; max-width: 800px; margin: 0 auto; }
+.pdf-header { display:flex; align-items:center; justify-content:space-between; border-bottom: 3px solid #00d4aa; padding-bottom: 16px; margin-bottom: 24px; }
+.pdf-brand { font-size: 22px; font-weight: 900; color: #0a0e1a; } .pdf-brand span { color: #00d4aa; }
+.pdf-meta { text-align: left; font-size: 12px; color: #555; }
+.pdf-title { font-size: 16px; font-weight: 900; color: #0a0e1a; margin-bottom: 20px; background: #f0fdf8; padding: 10px 16px; border-radius: 8px; border-right: 4px solid #00d4aa; }
+.pdf-section { margin-bottom: 20px; }
+.pdf-section-title { font-size: 13px; font-weight: 800; color: #00a37a; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #e0f7f0; }
+.pdf-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+.pdf-row:last-child { border-bottom: none; }
+.pdf-key { color: #555; } .pdf-val { font-weight: 700; color: #1a1a2e; }
+.pdf-pct-bar { height: 8px; background: #e8f5e9; border-radius: 4px; overflow: hidden; margin-top: 4px; }
+.pdf-pct-fill { height: 100%; border-radius: 4px; }
+.pdf-sec-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 12px; }
+.pdf-sec-name { width: 150px; color: #555; }
+.pdf-sec-track { flex:1; height: 7px; background: #eee; border-radius: 4px; overflow: hidden; }
+.pdf-sec-fill { height: 100%; border-radius: 4px; }
+.pdf-sec-pct { width: 40px; color: #888; font-size: 11px; text-align: left; }
+.pdf-footer { margin-top: 28px; padding-top: 12px; border-top: 1px solid #ddd; font-size: 11px; color: #aaa; text-align: center; }
+.pdf-highlight { background: #f0fdf8; border-radius: 8px; padding: 12px 16px; }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH OVERLAY ── -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">💎</div>
+      <div class="auth-title">LAZURDE & MANISA</div>
+      <div class="auth-sub">نظام إدارة المهام اليومية • تسجيل الدخول</div>
+    </div>
+    <div class="auth-field">
+      <label>📧 البريد الإلكتروني</label>
+      <input type="email" id="authEmail" placeholder="example@company.com" autocomplete="email">
+    </div>
+    <div class="auth-field">
+      <label>🔒 كلمة المرور</label>
+      <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="auth-btn" id="authBtn" onclick="doLogin()">🚀 دخول</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<!-- ── HEADER (shared) ── -->
+<header class="header" id="mainHeader" style="display:none">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon" id="headerIcon">💎</div>
+      <div>
+        <div class="logo-title" id="headerTitle">LAZURDE & MANISA</div>
+        <div class="logo-sub" id="headerSub">LAZURDE & MANISA</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+      <div class="header-date" id="headerDate">--</div>
+      <button class="refresh-btn" id="refreshBtn" onclick="loadReports()" style="display:none">🔄 تحديث</button>
+      <div class="user-badge" id="userBadge"></div>
+      <button class="logout-btn" onclick="doLogout()">خروج 🚪</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════
+     DASHBOARD VIEW
+══════════════════════════════════════ -->
+<div id="dashboardView" style="display:none">
+  <div class="filters">
+    <div class="filters-inner">
+      <span class="filter-label">تصفية:</span>
+      <input class="filter-input" type="date" id="filterFrom">
+      <input class="filter-input" type="date" id="filterTo">
+      <input class="filter-input" type="text" id="filterBranch" placeholder="🏪 الفرع..." style="width:140px;" oninput="renderTable()">
+      <input class="filter-input" type="text" id="filterManager" placeholder="👤 المدير..." style="width:140px;" oninput="renderTable()">
+      <button class="refresh-btn" onclick="loadReports()">🔍 بحث</button>
+      <button class="refresh-btn" onclick="clearFilters()" style="color:var(--text2);">✕ مسح</button>
+    </div>
+  </div>
+  <div class="main-dashboard">
+    <div class="kpi-grid">
+      <div class="kpi-card accent"><div class="kpi-icon">📋</div><div class="kpi-label">إجمالي التقارير</div><div class="kpi-value" id="kpiTotal">—</div><div class="kpi-sub">تقرير مُرسَل</div></div>
+      <div class="kpi-card green"><div class="kpi-icon">✅</div><div class="kpi-label">متوسط الإنجاز</div><div class="kpi-value" id="kpiAvgPct">—</div><div class="kpi-sub">نسبة إتمام المهام</div></div>
+      <div class="kpi-card gold"><div class="kpi-icon">💰</div><div class="kpi-label">إجمالي المبيعات</div><div class="kpi-value" id="kpiSales">—</div><div class="kpi-sub">دينار عراقي</div></div>
+      <div class="kpi-card blue"><div class="kpi-icon">👥</div><div class="kpi-label">إجمالي الزبائن</div><div class="kpi-value" id="kpiCustomers">—</div><div class="kpi-sub">زبون دخل الفرع</div></div>
+    </div>
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">📄 سجل التقارير اليومية</div>
+        <span class="table-count" id="tableCount">0 تقرير</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>📅 التاريخ</th><th>🏪 الفرع</th><th>👤 المدير</th>
+            <th>✅ الإنجاز</th><th>🛍️ القطع</th><th>🧾 الفواتير</th>
+            <th>👥 الزبائن</th><th>💰 المبيعات</th><th>📝 ملاحظات</th>
+            <th>⏱️ وقت الإرسال</th><th></th><th></th>
+          </tr></thead>
+          <tbody id="reportsTbody">
+            <tr><td colspan="13"><div class="loading"><div class="loading-spinner"></div>جاري التحميل...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modalTitle">تفاصيل التقرير</span>
+      <button class="modal-close" onclick="document.getElementById('modalBg').classList.remove('open')">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+<div id="pdfPage"></div>
+
+<!-- ══════════════════════════════════════
+     MANAGER VIEW
+══════════════════════════════════════ -->
+<div id="managerView" style="display:none">
+  <div class="main-manager">
+
+    <div class="manager-card">
+      <div class="field"><label>👤 اسم المدير</label><input type="text" id="managerName" placeholder="أدخل اسمك..."></div>
+      <div class="field"><label>🏪 الفرع</label><input type="text" id="branchName" placeholder="اسم الفرع..."></div>
+      <div class="field"><label>📅 التاريخ</label><input type="date" id="taskDate"></div>
+    </div>
+
+    <div class="progress-card">
+      <div class="progress-circle">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle class="track" cx="45" cy="45" r="36"/>
+          <circle class="fill" id="progressArc" cx="45" cy="45" r="36"/>
+        </svg>
+        <div class="label" id="progressPct">0%</div>
+      </div>
+      <div class="progress-info">
+        <div class="progress-title">إجمالي الإنجاز اليومي</div>
+        <div class="progress-sub" id="progressCount">0 / 0 مهمة منجزة</div>
+        <div class="section-bars" id="sectionBars"></div>
+      </div>
+    </div>
+
+    <!-- فتح الفرع -->
+    <div class="section-card" id="sec-open">
+      <div class="section-header" onclick="toggleSection('open')">
+        <div class="section-header-left">
+          <div class="section-icon" style="background:rgba(0,212,170,0.15);">🔓</div>
+          <div><div class="section-title">إجراءات فتح الفرع</div><div class="section-sub">7 مهام • الحضور والجاهزية</div></div>
+        </div>
+        <span class="section-badge badge-empty" id="badge-open">0 / 7</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body"><div id="tasks-open">
+        <div class="task-item" onclick="toggleTask(this,'open')"><div class="task-check"></div><div class="task-text">الوصول قبل 30 دقيقة من وقت فتح الفرع الرسمي</div></div>
+        <div class="task-item" onclick="toggleTask(this,'open')"><div class="task-check"></div><div class="task-text">فتح النظام وتسجيل الدخول والتحقق من عمله بشكل صحيح</div></div>
+        <div class="task-item" onclick="toggleTask(this,'open')"><div class="task-check"></div><div class="task-text">فتح جلسة المبيعات اليومية وتسجيل تاريخ ووقت الفتح</div></div>
+        <div class="task-item" onclick="toggleTask(this,'open')"><div class="task-check"></div><div class="task-text">التحقق من الإنارة الكاملة وتبليغ الصيانة فوراً عن أي عطل</div></div>
+        <div class="task-item" onclick="toggleTask(this,'open')"><div class="task-check"></div><div class="task-text">مراجعة نظافة الفرع وجاهزيته قبل دخول الزبائن</div></div>
+        <div class="task-item" onclick="toggleTask(this,'open')"><div class="task-check"></div><div class="task-text">مراجعة جدول الدوام وتحديد من يغطي كل منطقة اليوم</div></div>
+        <div class="task-item" onclick="toggleTask(this,'open')"><div class="task-check"></div><div class="task-text">تسجيل حضور الموظفين — أي غياب يُبلَّغ لمدير المنطقة خلال 15 دقيقة</div></div>
+      </div>
+      <div class="note-area"><div class="note-label">📝 ملاحظات القسم</div><textarea id="note-open" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- حضور الموظفين -->
+    <div class="section-card open" id="sec-attendance">
+      <div class="section-header" onclick="toggleSection('attendance')">
+        <div class="section-header-left">
+          <div class="section-icon" style="background:rgba(255,200,0,0.15);">👥</div>
+          <div><div class="section-title">سجل حضور الموظفين</div><div class="section-sub">تسجيل الأسماء وأوقات الحضور</div></div>
+        </div>
+        <span class="section-badge badge-empty" id="badge-attendance">0 موظف</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body">
+        <div id="attendance-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;"></div>
+        <button onclick="addEmployee()" style="background:rgba(0,212,170,0.12);border:1.5px dashed var(--green);color:var(--green);padding:10px 18px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;width:100%;transition:background 0.2s;" onmouseover="this.style.background='rgba(0,212,170,0.22)'" onmouseout="this.style.background='rgba(0,212,170,0.12)'">＋ إضافة موظف</button>
+      </div>
+    </div>
+
+    <!-- اجتماع اليوم -->
+    <div class="section-card" id="sec-huddle">
+      <div class="section-header" onclick="toggleSection('huddle')">
+        <div class="section-header-left">
+          <div class="section-icon" style="background:rgba(0,153,255,0.15);">🤝</div>
+          <div><div class="section-title">اجتماع منتصف اليوم</div><div class="section-sub">6 مهام • تحضير الفريق</div></div>
+        </div>
+        <span class="section-badge badge-empty" id="badge-huddle">0 / 6</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body"><div id="tasks-huddle">
+        <div class="task-item" onclick="toggleTask(this,'huddle')"><div class="task-check"></div><div class="task-text">جمع الفريق لمدة 10 دقائق قبل بدء العمل</div></div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')"><div class="task-check"></div><div class="task-text">مراجعة هدف المبيعات اليوم ومقارنته بالأمس</div></div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')"><div class="task-check"></div><div class="task-text">تحديد منتج اليوم أو القطعة التي يجب التركيز على بيعها</div></div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')"><div class="task-check"></div><div class="task-text">توزيع المناطق والمهام على كل موظف بوضوح</div></div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')"><div class="task-check"></div><div class="task-text">تذكير بأي تعليمات أو عروض خاصة لليوم</div></div>
+        <div class="task-item" onclick="toggleTask(this,'huddle')"><div class="task-check"></div><div class="task-text">توقيع الموظفين على سجل الاجتماع اليوم</div></div>
+      </div>
+      <div class="note-area"><div class="note-label">📝 ملاحظات القسم</div><textarea id="note-huddle" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- متابعة المبيعات -->
+    <div class="section-card" id="sec-sales">
+      <div class="section-header" onclick="toggleSection('sales')">
+        <div class="section-header-left">
+          <div class="section-icon" style="background:rgba(255,201,71,0.15);">📈</div>
+          <div><div class="section-title">متابعة المبيعات والأهداف</div><div class="section-sub">5 مهام • الرقابة والتحليل</div></div>
+        </div>
+        <span class="section-badge badge-empty" id="badge-sales">0 / 5</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body"><div id="tasks-sales">
+        <div class="task-item" onclick="toggleTask(this,'sales')"><div class="task-check"></div><div class="task-text">مراجعة تقرير المبيعات من النظام كل ساعتين</div></div>
+        <div class="task-item" onclick="toggleTask(this,'sales')"><div class="task-check"></div><div class="task-text">مقارنة المبيعات الفعلية بالهدف اليومي</div></div>
+        <div class="task-item" onclick="toggleTask(this,'sales')"><div class="task-check"></div><div class="task-text">عند التأخر عن الهدف بـ30% — توجيه الموظفين فوراً وتعديل الأسلوب</div></div>
+        <div class="task-item" onclick="toggleTask(this,'sales')"><div class="task-check"></div><div class="task-text">تتبع Conversion Rate خلال اليوم</div></div>
+        <div class="task-item" onclick="toggleTask(this,'sales')"><div class="task-check"></div><div class="task-text">تسجيل ملاحظة عن سبب الانخفاض إذا وُجد</div></div>
+      </div>
+      <div class="note-area"><div class="note-label">📝 ملاحظات القسم</div><textarea id="note-sales" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- الإشراف الميداني -->
+    <div class="section-card" id="sec-field">
+      <div class="section-header" onclick="toggleSection('field')">
+        <div class="section-header-left">
+          <div class="section-icon" style="background:rgba(255,107,53,0.15);">👁️</div>
+          <div><div class="section-title">الإشراف الميداني على الموظفين</div><div class="section-sub">4 مهام • المتابعة والرقابة</div></div>
+        </div>
+        <span class="section-badge badge-empty" id="badge-field">0 / 4</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body"><div id="tasks-field">
+        <div class="task-item" onclick="toggleTask(this,'field')"><div class="task-check"></div><div class="task-text">جولة ميدانية على الفرع بالكامل كل ساعة على الأقل</div></div>
+        <div class="task-item" onclick="toggleTask(this,'field')"><div class="task-check"></div><div class="task-text">التحقق من التزام كل موظف بمنطقته ومهمته المحددة</div></div>
+        <div class="task-item" onclick="toggleTask(this,'field')"><div class="task-check"></div><div class="task-text">مراقبة تعامل الموظفين مع الزبائن والتدخل الفوري عند الخطأ</div></div>
+        <div class="task-item" onclick="toggleTask(this,'field')"><div class="task-check"></div><div class="task-text">التأكد من أن موظف الخدمة لا يتواجد في صالة البيع أثناء وجود الزبائن</div></div>
+      </div>
+      <div class="note-area"><div class="note-label">📝 ملاحظات القسم</div><textarea id="note-field" placeholder="أكتب أي ملاحظة خاصة بهذا القسم..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- تجربة الزبون -->
+    <div class="section-card" id="sec-cx">
+      <div class="section-header" onclick="toggleSection('cx')">
+        <div class="section-header-left">
+          <div class="section-icon" style="background:rgba(255,201,71,0.15);">🛍️</div>
+          <div><div class="section-title">إدارة تجربة الزبون</div><div class="section-sub">4 مهام • رضا الزبائن والخدمة</div></div>
+        </div>
+        <span class="section-badge badge-empty" id="badge-cx">0 / 4</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body"><div id="tasks-cx">
+        <div class="task-item" onclick="toggleTask(this,'cx')"><div class="task-check"></div><div class="task-text">مراقبة وقت الخدمة — لا يبقى الزبون دون خدمة أكثر من دقيقتين</div></div>
+        <div class="task-item" onclick="toggleTask(this,'cx')"><div class="task-check"></div><div class="task-text">التدخل الفوري في حالات الشكوى أو عدم الرضا</div></div>
+        <div class="task-item" onclick="toggleTask(this,'cx')"><div class="task-check"></div><div class="task-text">التأكد من توفر الملصقات للعروض والأسعار بوضوح</div></div>
+        <div class="task-item" onclick="toggleTask(this,'cx')"><div class="task-check"></div><div class="task-text">تسجيل شكاوى الزبائن مع الإجراء المتخذ</div></div>
+      </div>
+      <div class="note-area"><div class="note-label">📝 شكاوى الزبائن وملاحظات الخدمة</div><textarea id="note-cx" placeholder="سجّل أي شكوى أو ملاحظة خاصة بتجربة الزبون اليوم..."></textarea></div>
+      </div>
+    </div>
+
+    <!-- إغلاق الفرع -->
+    <div class="section-card" id="sec-close">
+      <div class="section-header" onclick="toggleSection('close')">
+        <div class="section-header-left">
+          <div class="section-icon" style="background:rgba(255,71,87,0.15);">🔒</div>
+          <div><div class="section-title">إجراءات إغلاق الفرع اليومي</div><div class="section-sub">3 مهام • الإغلاق والمطابقة</div></div>
+        </div>
+        <span class="section-badge badge-empty" id="badge-close">0 / 3</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="section-body"><div id="tasks-close">
+        <div class="task-item" onclick="toggleTask(this,'close')"><div class="task-check"></div><div class="task-text">مراقبة إغلاق جلسات الكاشير ومطابقة الكاشير بعد الغلق</div></div>
+        <div class="task-item" onclick="toggleTask(this,'close')"><div class="task-check"></div><div class="task-text">مراجعة تقرير المبيعات اليومي وتسجيل الأرقام الختامية</div></div>
+        <div class="task-item" onclick="toggleTask(this,'close')"><div class="task-check"></div><div class="task-text">التأكد من إغلاق جميع الأجهزة والأضواء وتأمين الفرع</div></div>
+      </div>
+
+      <div class="divider"></div>
+      <div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:12px;letter-spacing:0.5px;">📊 أرقام نهاية اليوم</div>
+      <div class="closing-numbers">
+        <div class="num-field"><label>🛍️ عدد القطع المباعة</label><input type="number" id="closingPieces" placeholder="0" min="0" oninput="calcClosing()"></div>
+        <div class="num-field"><label>🧾 عدد الفواتير</label><input type="number" id="closingInvoices" placeholder="0" min="0" oninput="calcClosing()"></div>
+        <div class="num-field"><label>👥 عدد الزبائن الذين دخلوا</label><input type="number" id="closingCustomers" placeholder="0" min="0" oninput="calcClosing()"></div>
+        <div class="num-field"><label>💰 إجمالي المبيعات (د.ع)</label><input type="number" id="closingSales" placeholder="0" min="0" oninput="calcClosing()"></div>
+      </div>
+      <div class="closing-stats" id="closingStats" style="display:none;">
+        <div class="cstat"><div class="cstat-label">Conversion Rate</div><div class="cstat-value" id="cstatConv">—</div></div>
+        <div class="cstat"><div class="cstat-label">متوسط الفاتورة</div><div class="cstat-value" id="cstatBasket">—</div></div>
+        <div class="cstat"><div class="cstat-label">قطع / فاتورة</div><div class="cstat-value" id="cstatUPT">—</div></div>
+      </div>
+      <div class="note-area" style="margin-top:14px;">
+        <div class="note-label">📝 ملاحظات الإغلاق</div>
+        <textarea id="note-close" placeholder="أي ملاحظة عن نهاية اليوم..."></textarea>
+      </div>
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">أكمل جميع الأقسام قبل إرسال التقرير</div>
+      <button class="submit-btn" onclick="submitReport()">📤 إرسال التقرير اليومي</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Supabase ──
+const SUPABASE_URL = 'https://srtutwgpbllrrdzgouje.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_25A9gDLPWTvHNjjd1rWJAg_HQuFxf7d';
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── AUTH ──
+async function checkAuth() {
+  const { data: { session } } = await _sb.auth.getSession();
+  if (session) {
+    await verifyRole(session.user);
+  }
+  // else: auth overlay already visible by default
+}
+
+async function verifyRole(user) {
+  const { data, error } = await _sb
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single();
+
+  if (error || !data) {
+    await _sb.auth.signOut();
+    showAuthError('⛔ غير مصرح — تواصل مع الإدارة لتفعيل حسابك');
+    resetAuthBtn();
+    return;
+  }
+
+  if (data.role === 'dashboard') {
+    showDashboard(user);
+  } else if (data.role === 'manager') {
+    showManager(user);
+  } else {
+    await _sb.auth.signOut();
+    showAuthError('⛔ دور غير معروف — تواصل مع الإدارة');
+    resetAuthBtn();
+  }
+}
+
+function showDashboard(user) {
+  document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('mainHeader').style.display = '';
+  document.getElementById('headerIcon').textContent = '📊';
+  document.getElementById('headerTitle').textContent = 'لوحة تحكم التقارير';
+  document.getElementById('headerSub').textContent = 'LAZURDE & MANISA';
+  document.getElementById('userBadge').textContent = '👤 ' + (user.email || '');
+  document.getElementById('refreshBtn').style.display = '';
+  document.getElementById('dashboardView').style.display = '';
+  loadReports();
+}
+
+function showManager(user) {
+  document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('mainHeader').style.display = '';
+  document.getElementById('headerIcon').textContent = '📋';
+  document.getElementById('headerTitle').textContent = 'مهام المدير اليومية';
+  document.getElementById('headerSub').textContent = 'LAZURDE & MANISA';
+  document.getElementById('userBadge').textContent = '👤 ' + (user.email || '');
+  document.getElementById('managerView').style.display = '';
+  // Auto-fill manager name from email
+  const name = (user.email || '').split('@')[0].replace(/[._]/g, ' ');
+  if (!document.getElementById('managerName').value) {
+    document.getElementById('managerName').value = name;
+  }
+  document.getElementById('taskDate').value = new Date().toISOString().split('T')[0];
+  updateProgress();
+}
+
+async function doLogin() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass  = document.getElementById('authPassword').value;
+  const btn   = document.getElementById('authBtn');
+  document.getElementById('authError').style.display = 'none';
+  if (!email || !pass) { showAuthError('أدخل الإيميل وكلمة المرور'); return; }
+  btn.disabled = true; btn.textContent = '⏳ جاري الدخول...';
+  const { data, error } = await _sb.auth.signInWithPassword({ email, password: pass });
+  if (error) {
+    showAuthError('❌ بيانات غير صحيحة، تحقق من الإيميل أو كلمة المرور');
+    resetAuthBtn();
+  } else {
+    await verifyRole(data.user);
+  }
+}
+
+async function doLogout() {
+  await _sb.auth.signOut();
+  document.getElementById('mainHeader').style.display = 'none';
+  document.getElementById('dashboardView').style.display = 'none';
+  document.getElementById('managerView').style.display = 'none';
+  document.getElementById('authOverlay').style.display = 'flex';
+  document.getElementById('authEmail').value = '';
+  document.getElementById('authPassword').value = '';
+  document.getElementById('authError').style.display = 'none';
+  resetAuthBtn();
+}
+
+function showAuthError(msg) {
+  const e = document.getElementById('authError');
+  e.textContent = msg; e.style.display = 'block';
+}
+function resetAuthBtn() {
+  const btn = document.getElementById('authBtn');
+  btn.disabled = false; btn.textContent = '🚀 دخول';
+}
+
+// ── DATE ──
+function updateDate() {
+  document.getElementById('headerDate').textContent =
+    new Date().toLocaleDateString('ar-EG', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+updateDate();
+setInterval(updateDate, 60000);
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ════════════════════════════════════════
+//  ATTENDANCE LOGIC
+// ════════════════════════════════════════
+let employees = [];
+
+function addEmployee() {
+  const id = Date.now();
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const defaultTime = hh + ':' + mm;
+  employees.push({ id, name: '', time: defaultTime, status: 'حاضر' });
+  renderAttendance();
+}
+
+function removeEmployee(id) {
+  employees = employees.filter(e => e.id !== id);
+  renderAttendance();
+}
+
+function updateEmployee(id, field, value) {
+  const emp = employees.find(e => e.id === id);
+  if (emp) { emp[field] = value; updateAttendanceBadge(); }
+}
+
+function updateAttendanceBadge() {
+  const badge = document.getElementById('badge-attendance');
+  const count = employees.length;
+  badge.textContent = count + ' موظف';
+  badge.className = count === 0 ? 'section-badge badge-empty' : 'section-badge badge-partial';
+}
+
+function renderAttendance() {
+  const list = document.getElementById('attendance-list');
+  list.innerHTML = employees.map(emp => `
+    <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:8px;align-items:center;background:var(--card2);border-radius:10px;padding:10px 12px;border:1px solid var(--border);">
+      <input
+        type="text"
+        placeholder="اسم الموظف"
+        value="${emp.name}"
+        oninput="updateEmployee(${emp.id},'name',this.value)"
+        style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text1);font-size:14px;direction:rtl;outline:none;"
+      />
+      <input
+        type="time"
+        value="${emp.time}"
+        onchange="updateEmployee(${emp.id},'time',this.value)"
+        style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text1);font-size:14px;outline:none;"
+      />
+      <select
+        onchange="updateEmployee(${emp.id},'status',this.value)"
+        style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text1);font-size:13px;outline:none;cursor:pointer;"
+      >
+        <option value="حاضر" ${emp.status==='حاضر'?'selected':''}>✅ حاضر</option>
+        <option value="متأخر" ${emp.status==='متأخر'?'selected':''}>⚠️ متأخر</option>
+        <option value="غائب" ${emp.status==='غائب'?'selected':''}>❌ غائب</option>
+      </select>
+      <button onclick="removeEmployee(${emp.id})" style="background:rgba(255,71,87,0.12);border:1px solid rgba(255,71,87,0.3);color:#ff4757;border-radius:8px;padding:7px 10px;cursor:pointer;font-size:14px;" title="حذف">🗑</button>
+    </div>
+  `).join('');
+  updateAttendanceBadge();
+}
+
+function getAttendanceText() {
+  if (employees.length === 0) return '';
+  return employees.map(e => `${e.name||'—'} | ${e.time} | ${e.status}`).join('\n');
+}
+
+// ════════════════════════════════════════
+//  MANAGER LOGIC
+// ════════════════════════════════════════
+const sections = {
+  open:   { total: 7, done: 0 },
+  huddle: { total: 6, done: 0 },
+  sales:  { total: 5, done: 0 },
+  field:  { total: 4, done: 0 },
+  cx:     { total: 4, done: 0 },
+  close:  { total: 3, done: 0 },
+};
+const sectionLabels = {
+  open:'فتح الفرع', huddle:'اجتماع اليوم', sales:'متابعة المبيعات',
+  field:'الإشراف الميداني', cx:'تجربة الزبون', close:'إغلاق الفرع',
+};
+
+function toggleSection(id) {
+  document.getElementById('sec-' + id).classList.toggle('open');
+}
+
+function toggleTask(el, secId) {
+  el.classList.toggle('checked');
+  recalcSection(secId);
+}
+
+function recalcSection(secId) {
+  const container = document.getElementById('tasks-' + secId);
+  const done = container.querySelectorAll('.task-item.checked').length;
+  const total = container.querySelectorAll('.task-item').length;
+  sections[secId].done = done;
+  const badge = document.getElementById('badge-' + secId);
+  badge.textContent = done + ' / ' + total;
+  badge.className = done === 0 ? 'section-badge badge-empty' : done === total ? 'section-badge badge-done' : 'section-badge badge-partial';
+  updateProgress();
+}
+
+function updateProgress() {
+  let totalDone = 0, totalAll = 0;
+  Object.keys(sections).forEach(k => { totalDone += sections[k].done; totalAll += sections[k].total; });
+  const pct = totalAll > 0 ? Math.round(totalDone / totalAll * 100) : 0;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressCount').textContent = totalDone + ' / ' + totalAll + ' مهمة منجزة';
+  const arc = document.getElementById('progressArc');
+  arc.style.strokeDashoffset = 226 - (226 * pct / 100);
+  arc.style.stroke = pct >= 85 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--accent)';
+  document.getElementById('sectionBars').innerHTML = Object.keys(sections).map(k => {
+    const s = sections[k];
+    const p = s.total > 0 ? Math.round(s.done / s.total * 100) : 0;
+    const col = p === 100 ? 'var(--green)' : p > 0 ? 'var(--gold)' : 'var(--border)';
+    return `<div class="sec-bar-row"><div class="sec-bar-label">${sectionLabels[k]}</div><div class="sec-bar-track"><div class="sec-bar-fill" style="width:${p}%;background:${col}"></div></div><div class="sec-bar-val">${p}%</div></div>`;
+  }).join('');
+}
+
+function calcClosing() {
+  const pieces    = parseFloat(document.getElementById('closingPieces').value) || 0;
+  const invoices  = parseFloat(document.getElementById('closingInvoices').value) || 0;
+  const customers = parseFloat(document.getElementById('closingCustomers').value) || 0;
+  const sales     = parseFloat(document.getElementById('closingSales').value) || 0;
+  const statsEl   = document.getElementById('closingStats');
+  if (pieces + invoices + customers + sales === 0) { statsEl.style.display = 'none'; return; }
+  statsEl.style.display = 'grid';
+  document.getElementById('cstatConv').textContent   = customers > 0 ? (invoices/customers*100).toFixed(1)+'%' : '—';
+  document.getElementById('cstatBasket').textContent = invoices  > 0 ? Math.round(sales/invoices).toLocaleString() : '—';
+  document.getElementById('cstatUPT').textContent    = invoices  > 0 ? (pieces/invoices).toFixed(1) : '—';
+}
+
+async function submitReport() {
+  const manager = document.getElementById('managerName').value.trim();
+  const branch  = document.getElementById('branchName').value.trim();
+  const date    = document.getElementById('taskDate').value;
+  if (!manager) { showToast('⚠️ أدخل اسم المدير أولاً'); return; }
+  if (!branch)  { showToast('⚠️ أدخل اسم الفرع أولاً'); return; }
+  let totalDone = 0, totalAll = 0;
+  Object.keys(sections).forEach(k => { totalDone += sections[k].done; totalAll += sections[k].total; });
+  const pct = totalAll > 0 ? Math.round(totalDone / totalAll * 100) : 0;
+  const payload = {
+    manager_name: manager, branch_name: branch, task_date: date,
+    sec_open_done: sections.open.done, sec_open_total: sections.open.total,
+    sec_huddle_done: sections.huddle.done, sec_huddle_total: sections.huddle.total,
+    sec_sales_done: sections.sales.done, sec_sales_total: sections.sales.total,
+    sec_field_done: sections.field.done, sec_field_total: sections.field.total,
+    sec_cx_done: sections.cx.done, sec_cx_total: sections.cx.total,
+    sec_close_done: sections.close.done, sec_close_total: sections.close.total,
+    total_done: totalDone, total_tasks: totalAll, pct: pct,
+    closing_pieces:    parseInt(document.getElementById('closingPieces').value) || 0,
+    closing_invoices:  parseInt(document.getElementById('closingInvoices').value) || 0,
+    closing_customers: parseInt(document.getElementById('closingCustomers').value) || 0,
+    closing_sales:     parseFloat(document.getElementById('closingSales').value) || 0,
+    note_open:   document.getElementById('note-open').value.trim(),
+    note_huddle: document.getElementById('note-huddle').value.trim(),
+    note_sales:  document.getElementById('note-sales').value.trim(),
+    note_field:  document.getElementById('note-field').value.trim(),
+    note_cx:     document.getElementById('note-cx').value.trim(),
+    note_close:  document.getElementById('note-close').value.trim(),
+    attendance:  getAttendanceText(),
+  };
+  const btn = document.querySelector('.submit-btn');
+  btn.disabled = true; btn.textContent = '⏳ جاري الإرسال...';
+  try {
+    const { error } = await _sb.from('daily_reports').insert([payload]);
+    if (error) throw error;
+    showToast('✅ تم إرسال التقرير وحفظه بنجاح!');
+    btn.textContent = '✅ تم الإرسال';
+    btn.style.background = 'linear-gradient(135deg, var(--green), #00b894)';
+  } catch(err) {
+    showToast('❌ خطأ في الإرسال: ' + err.message);
+    btn.disabled = false; btn.textContent = '📤 إرسال التقرير اليومي';
+  }
+}
+
+// ════════════════════════════════════════
+//  DASHBOARD LOGIC
+// ════════════════════════════════════════
+let allReports = [];
+
+async function loadReports() {
+  const tbody = document.getElementById('reportsTbody');
+  tbody.innerHTML = `<tr><td colspan="13"><div class="loading"><div class="loading-spinner"></div>جاري التحميل...</div></td></tr>`;
+  try {
+    let query = _sb.from('daily_reports').select('*').order('created_at', { ascending: false });
+    const from = document.getElementById('filterFrom').value;
+    const to   = document.getElementById('filterTo').value;
+    if (from) query = query.gte('task_date', from);
+    if (to)   query = query.lte('task_date', to);
+    const { data, error } = await query.limit(500);
+    if (error) throw error;
+    allReports = data || [];
+    renderTable();
+    updateKPIs();
+  } catch(err) {
+    tbody.innerHTML = `<tr><td colspan="13"><div class="empty">❌ خطأ في التحميل: ${err.message}</div></td></tr>`;
+  }
+}
+
+function renderTable() {
+  const branchF  = document.getElementById('filterBranch').value.toLowerCase();
+  const managerF = document.getElementById('filterManager').value.toLowerCase();
+  let filtered = allReports.filter(r => {
+    if (branchF  && !(r.branch_name  || '').toLowerCase().includes(branchF))  return false;
+    if (managerF && !(r.manager_name || '').toLowerCase().includes(managerF)) return false;
+    return true;
+  });
+  document.getElementById('tableCount').textContent = filtered.length + ' تقرير';
+  updateKPIs(filtered);
+  const tbody = document.getElementById('reportsTbody');
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="13"><div class="empty">📭 لا توجد تقارير مطابقة</div></td></tr>`;
+    return;
+  }
+  window.filteredData = filtered;
+  tbody.innerHTML = filtered.map((r, i) => {
+    const pct = r.pct || 0;
+    const pctClass = pct >= 85 ? 'pct-high' : pct >= 50 ? 'pct-mid' : 'pct-low';
+    const pctIcon  = pct >= 85 ? '✅' : pct >= 50 ? '⚠️' : '❌';
+    const createdAt = r.created_at ? new Date(r.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) : '—';
+    const notes = [r.note_open,r.note_huddle,r.note_sales,r.note_field,r.note_cx,r.note_close].filter(Boolean).join(' | ');
+    return `<tr>
+      <td style="color:var(--text3)">${i+1}</td>
+      <td><strong>${r.task_date||'—'}</strong></td>
+      <td>🏪 ${r.branch_name||'—'}</td>
+      <td>👤 ${r.manager_name||'—'}</td>
+      <td><span class="pct-badge ${pctClass}">${pctIcon} ${pct}%</span><br><span style="font-size:11px;color:var(--text3)">${r.total_done||0}/${r.total_tasks||0}</span></td>
+      <td>${(r.closing_pieces||0).toLocaleString()}</td>
+      <td>${(r.closing_invoices||0).toLocaleString()}</td>
+      <td>${(r.closing_customers||0).toLocaleString()}</td>
+      <td style="color:var(--gold);font-weight:700">${(r.closing_sales||0).toLocaleString()}</td>
+      <td><div class="note-cell">${notes||'—'}</div></td>
+      <td style="color:var(--text3)">${createdAt}</td>
+      <td><button class="expand-btn" onclick="openModal(filteredData[${i}])">🔍 تفاصيل</button></td>
+      <td><button class="pdf-btn" onclick="printReport(filteredData[${i}])">🖨️ PDF</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateKPIs(data) {
+  const d = data || allReports;
+  const total = d.length;
+  const avgPct = total > 0 ? Math.round(d.reduce((s,r) => s+(r.pct||0),0)/total) : 0;
+  document.getElementById('kpiTotal').textContent     = total.toLocaleString();
+  document.getElementById('kpiAvgPct').textContent    = avgPct + '%';
+  document.getElementById('kpiSales').textContent     = d.reduce((s,r)=>s+(r.closing_sales||0),0).toLocaleString();
+  document.getElementById('kpiCustomers').textContent = d.reduce((s,r)=>s+(r.closing_customers||0),0).toLocaleString();
+}
+
+function openModal(r) {
+  const secs = ['open','huddle','sales','field','cx','close'];
+  const secRows = secs.map(k => {
+    const done=r[`sec_${k}_done`]||0, total=r[`sec_${k}_total`]||0;
+    const pct=total>0?Math.round(done/total*100):0;
+    const col=pct===100?'var(--green)':pct>0?'var(--gold)':'var(--border)';
+    return `<div class="sec-row"><div class="sec-name">${sectionLabels[k]}</div><div class="sec-track"><div class="sec-fill" style="width:${pct}%;background:${col}"></div></div><div class="sec-pct">${done}/${total}</div></div>`;
+  }).join('');
+  const notes = secs.map(k => r[`note_${k}`] ? `<div class="modal-row"><span class="modal-key">${sectionLabels[k]}</span><span class="modal-val">${r[`note_${k}`]}</span></div>` : '').filter(Boolean).join('');
+  const conv   = r.closing_customers>0?((r.closing_invoices||0)/r.closing_customers*100).toFixed(1)+'%':'—';
+  const basket = r.closing_invoices>0?Math.round((r.closing_sales||0)/r.closing_invoices).toLocaleString():'—';
+  document.getElementById('modalTitle').textContent = `📋 ${r.branch_name||'فرع'} — ${r.task_date||''}`;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-row"><span class="modal-key">👤 المدير</span><span class="modal-val">${r.manager_name||'—'}</span></div>
+    <div class="modal-row"><span class="modal-key">📅 التاريخ</span><span class="modal-val">${r.task_date||'—'}</span></div>
+    <div class="modal-row"><span class="modal-key">✅ الإنجاز الكلي</span><span class="modal-val" style="color:var(--accent)">${r.pct||0}% (${r.total_done||0}/${r.total_tasks||0})</span></div>
+    <div style="margin:14px 0 8px;font-size:12px;color:var(--accent);font-weight:700;">📊 تفصيل الأقسام</div>
+    <div class="sec-progress">${secRows}</div>
+    <div style="margin:14px 0 8px;font-size:12px;color:var(--gold);font-weight:700;">💰 أرقام نهاية اليوم</div>
+    <div class="modal-row"><span class="modal-key">🛍️ القطع</span><span class="modal-val">${(r.closing_pieces||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">🧾 الفواتير</span><span class="modal-val">${(r.closing_invoices||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">👥 الزبائن</span><span class="modal-val">${(r.closing_customers||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">💰 المبيعات</span><span class="modal-val" style="color:var(--gold)">${(r.closing_sales||0).toLocaleString()}</span></div>
+    <div class="modal-row"><span class="modal-key">📈 Conversion</span><span class="modal-val">${conv}</span></div>
+    <div class="modal-row"><span class="modal-key">🧺 متوسط الفاتورة</span><span class="modal-val">${basket}</span></div>
+    ${notes?`<div style="margin:14px 0 8px;font-size:12px;color:var(--text2);font-weight:700;">📝 الملاحظات</div>${notes}`:''}
+    ${r.attendance?`<div style="margin:14px 0 8px;font-size:12px;color:var(--accent);font-weight:700;">👥 سجل الحضور</div><div style="background:var(--card2);border-radius:10px;padding:12px;font-size:13px;line-height:2;white-space:pre-line;direction:rtl;">${r.attendance}</div>`:''}
+  `;
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalBg'))
+    document.getElementById('modalBg').classList.remove('open');
+}
+
+function clearFilters() {
+  document.getElementById('filterFrom').value = '';
+  document.getElementById('filterTo').value = '';
+  document.getElementById('filterBranch').value = '';
+  document.getElementById('filterManager').value = '';
+  renderTable();
+}
+
+function printReport(r) {
+  const secs = ['open','huddle','sales','field','cx','close'];
+  const pct = r.pct||0;
+  const pctColor = pct>=85?'#2ed573':pct>=50?'#ffc947':'#ff4757';
+  const secRows = secs.map(k => {
+    const done=r[`sec_${k}_done`]||0,total=r[`sec_${k}_total`]||0;
+    const p=total>0?Math.round(done/total*100):0;
+    const col=p===100?'#2ed573':p>0?'#ffc947':'#ddd';
+    return `<div class="pdf-sec-row"><div class="pdf-sec-name">${sectionLabels[k]}</div><div class="pdf-sec-track"><div class="pdf-sec-fill" style="width:${p}%;background:${col}"></div></div><div class="pdf-sec-pct">${done}/${total}</div></div>`;
+  }).join('');
+  const notes = secs.map(k=>r[`note_${k}`]?`<div class="pdf-row"><span class="pdf-key">${sectionLabels[k]}</span><span class="pdf-val">${r[`note_${k}`]}</span></div>`:'').filter(Boolean).join('');
+  const conv   = r.closing_customers>0?((r.closing_invoices||0)/r.closing_customers*100).toFixed(1)+'%':'—';
+  const basket = r.closing_invoices>0?Math.round((r.closing_sales||0)/r.closing_invoices).toLocaleString():'—';
+  const now    = new Date().toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('pdfPage').innerHTML = `
+    <div class="pdf-header"><div class="pdf-brand">LAZURDE <span>&</span> MANISA</div><div class="pdf-meta">تقرير يومي<br>${now}</div></div>
+    <div class="pdf-title">📋 ${r.branch_name||'فرع'} — ${r.task_date||''}</div>
+    <div class="pdf-section">
+      <div class="pdf-section-title">📌 معلومات التقرير</div>
+      <div class="pdf-row"><span class="pdf-key">👤 المدير</span><span class="pdf-val">${r.manager_name||'—'}</span></div>
+      <div class="pdf-row"><span class="pdf-key">🏪 الفرع</span><span class="pdf-val">${r.branch_name||'—'}</span></div>
+      <div class="pdf-row"><span class="pdf-key">📅 التاريخ</span><span class="pdf-val">${r.task_date||'—'}</span></div>
+      <div class="pdf-row"><span class="pdf-key">✅ نسبة الإنجاز</span><span class="pdf-val" style="color:${pctColor}">${pct}% (${r.total_done||0}/${r.total_tasks||0})</span></div>
+      <div class="pdf-pct-bar"><div class="pdf-pct-fill" style="width:${pct}%;background:${pctColor}"></div></div>
+    </div>
+    <div class="pdf-section"><div class="pdf-section-title">📊 تفصيل الأقسام</div>${secRows}</div>
+    <div class="pdf-section pdf-highlight">
+      <div class="pdf-section-title">💰 أرقام نهاية اليوم</div>
+      <div class="pdf-row"><span class="pdf-key">🛍️ القطع</span><span class="pdf-val">${(r.closing_pieces||0).toLocaleString()}</span></div>
+      <div class="pdf-row"><span class="pdf-key">🧾 الفواتير</span><span class="pdf-val">${(r.closing_invoices||0).toLocaleString()}</span></div>
+      <div class="pdf-row"><span class="pdf-key">👥 الزبائن</span><span class="pdf-val">${(r.closing_customers||0).toLocaleString()}</span></div>
+      <div class="pdf-row"><span class="pdf-key">💰 المبيعات</span><span class="pdf-val" style="color:#e6a817;font-size:16px">${(r.closing_sales||0).toLocaleString()} د.ع</span></div>
+      <div class="pdf-row"><span class="pdf-key">📈 Conversion</span><span class="pdf-val">${conv}</span></div>
+      <div class="pdf-row"><span class="pdf-key">🧺 متوسط الفاتورة</span><span class="pdf-val">${basket}</span></div>
+    </div>
+    ${notes?`<div class="pdf-section"><div class="pdf-section-title">📝 الملاحظات</div>${notes}</div>`:''}
+    ${r.attendance?`<div class="pdf-section"><div class="pdf-section-title">👥 سجل حضور الموظفين</div><div style="font-size:13px;line-height:2.2;white-space:pre-line;direction:rtl;padding:4px 0;">${r.attendance}</div></div>`:''}
+    <div class="pdf-footer">تم إنشاء هذا التقرير تلقائياً • نظام مهام المدير اليومية • LAZURDE & MANISA</div>
+  `;
+  window.print();
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('authPassword').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+  document.getElementById('authEmail').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('authPassword').focus(); });
+  checkAuth();
+});
+
+// Auto refresh dashboard every 2 min
+setInterval(() => {
+  if (document.getElementById('dashboardView').style.display !== 'none') loadReports();
+}, 120000);
+</script>
+</body>
+</html>
